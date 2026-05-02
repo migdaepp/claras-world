@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Clara's Magical World</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+/* ---------- Hero variation A: Floating cast ---------- */
+.heroA {
+  position: relative;
+  padding: 40px 24px 100px;
+  text-align: center;
+  overflow: hidden;
+}
+.heroA .blob1 { width: 380px; height: 380px; background: var(--cotton); top: -80px; left: -80px; }
+.heroA .blob2 { width: 420px; height: 420px; background: var(--lavender); top: 40px; right: -100px; }
+.heroA .stage {
+  position: relative;
+  margin: 30px auto 0;
+  max-width: 900px;
+  height: 280px;
+}
+.heroA .stage > * { position: absolute; }
+.heroA .stage .teddy { left: 50%; transform: translateX(-50%); top: 30px; }
+.heroA .stage .unicorn { left: 8%; top: 80px; }
+.heroA .stage .sloth { right: 8%; top: 100px; }
+.heroA .cta-row {
+  display: flex; gap: 14px; justify-content: center; margin-top: 36px;
+  flex-wrap: wrap;
+}
+
+/* ---------- Hero variation B: Storybook spread ---------- */
+.heroB {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 30px;
+  align-items: center;
+  padding: 40px 36px 80px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.heroB .blob1 { width: 380px; height: 380px; background: var(--cotton); top: -100px; right: 30%; }
+.heroB .text-side { position: relative; z-index: 2; }
+.heroB .visual-side {
+  position: relative;
+  height: 460px;
+  background: linear-gradient(135deg, white, #fff5fb);
+  border-radius: 50px;
+  box-shadow: var(--shadow-pop);
+  overflow: hidden;
+}
+.heroB .visual-side::before {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border: 3px dashed var(--cotton-deep);
+  border-radius: 40px;
+  opacity: 0.4;
+}
+.heroB .vs-rainbow {
+  position: absolute;
+  top: 30px; left: 50%; transform: translateX(-50%);
+  width: 300px; height: 150px;
+  border-radius: 300px 300px 0 0;
+  background: conic-gradient(from 270deg at 50% 100%,
+    transparent 0deg 90deg,
+    var(--rainbow-1) 90deg 105deg,
+    var(--rainbow-2) 105deg 120deg,
+    var(--rainbow-3) 120deg 135deg,
+    var(--rainbow-4) 135deg 150deg,
+    var(--rainbow-5) 150deg 165deg,
+    var(--rainbow-6) 165deg 180deg,
+    transparent 180deg);
+  opacity: 0.7;
+}
+.heroB .vs-teddy { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); }
+.heroB .vs-cloud {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 30px 0 0 -8px white, -30px 0 0 -8px white, 0 -16px 0 -10px white;
+}
+.heroB .vs-cloud.c1 { width: 70px; height: 40px; top: 40px; left: 30px; }
+.heroB .vs-cloud.c2 { width: 60px; height: 35px; top: 70px; right: 40px; }
+@media (max-width: 800px) {
+  .heroB { grid-template-columns: 1fr; }
+  .heroB .visual-side { height: 360px; }
+}
+
+/* ---------- Hero variation C: Big bold name ---------- */
+.heroC {
+  position: relative;
+  padding: 60px 24px 100px;
+  text-align: center;
+  overflow: hidden;
+}
+.heroC .blob1 { width: 500px; height: 500px; background: var(--lavender); top: -200px; left: 50%; transform: translateX(-50%); }
+.heroC .name {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: clamp(80px, 16vw, 200px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, #ff7eb5 0%, #c8a0ff 50%, #8ec5ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-top: 20px;
+}
+.heroC .name-deco {
+  display: inline-block;
+  position: relative;
+}
+.heroC .name-deco::before {
+  content: '\2B50';
+  position: absolute;
+  top: -10px; right: -40px;
+  font-size: 50px;
+  -webkit-text-fill-color: initial;
+  background: none;
+  animation: wiggle 3s ease-in-out infinite;
+}
+.heroC .floating-friends {
+  position: relative;
+  margin-top: 40px;
+  height: 200px;
+}
+.heroC .floating-friends > * { position: absolute; bottom: 0; }
+.heroC .floating-friends .unicorn { left: 18%; }
+.heroC .floating-friends .sloth { right: 18%; }
+.heroC .floating-friends .teddy { left: 50%; transform: translateX(-50%); }
+
+.subhead {
+  font-size: clamp(16px, 2vw, 20px);
+  color: var(--ink-soft);
+  margin-top: 18px;
+  max-width: 520px;
+  margin-left: auto; margin-right: auto;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.note-banner {
+  background: linear-gradient(135deg, var(--buttercup), var(--peach));
+  color: var(--cotton-ink);
+  text-align: center;
+  padding: 12px 24px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  position: relative;
+  z-index: 5;
+}
+</style>
+</head>
+<body>
+
+<div class="note-banner">
+  A magical website made with love for Clara — by Uncle Madeleine
+</div>
+
+<nav class="nav">
+  <a href="index.html" class="nav-brand">
+    <span class="nav-brand-icon">&#x1F984;</span>
+    <span>Clara's Magical World</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link active">Home</a>
+    <a href="adventures.html" class="nav-link">Teddy's Adventures</a>
+    <a href="guestbook.html" class="nav-link">Guestbook</a>
+  </div>
+</nav>
+
+<!-- Variation A: Floating cast -->
+<section class="heroA" data-variant="A" id="heroA">
+  <div class="cloud-blob blob1"></div>
+  <div class="cloud-blob blob2"></div>
+  <div class="container">
+    <span class="eyebrow">Welcome</span>
+    <h1 class="h-display" style="margin-top: 18px;">Hi, I'm Clara!</h1>
+    <p class="subhead">This is my magical world full of unicorns, rainbow sloths, sparkles... and of course, my best friend Teddy!</p>
+    <div class="stage">
+      <div class="unicorn bounce">
+        <div class="unicorn-mane"></div>
+        <div class="unicorn-tail"></div>
+        <div class="unicorn-body"></div>
+        <div class="unicorn-head">
+          <div class="unicorn-horn"></div>
+          <div class="unicorn-eye"></div>
+          <div class="unicorn-cheek"></div>
+        </div>
+        <div class="unicorn-leg l1"></div>
+        <div class="unicorn-leg l2"></div>
+        <div class="unicorn-leg l3"></div>
+        <div class="unicorn-leg l4"></div>
+      </div>
+      <div class="teddy bounce-slow">
+        <div class="teddy-ear left"></div>
+        <div class="teddy-ear right"></div>
+        <div class="teddy-head">
+          <div class="teddy-eye left"></div>
+          <div class="teddy-eye right"></div>
+          <div class="teddy-cheek left"></div>
+          <div class="teddy-cheek right"></div>
+          <div class="teddy-nose"></div>
+          <div class="teddy-mouth"></div>
+        </div>
+        <div class="teddy-body"></div>
+        <div class="teddy-arm left"></div>
+        <div class="teddy-arm right"></div>
+        <div class="teddy-star">&#x2605;</div>
+      </div>
+      <div class="sloth bounce">
+        <div class="sloth-rainbow"></div>
+        <div class="sloth-arm left"></div>
+        <div class="sloth-arm right"></div>
+        <div class="sloth-body"></div>
+        <div class="sloth-face">
+          <div class="sloth-stripe"></div>
+          <div class="sloth-eye left"></div>
+          <div class="sloth-eye right"></div>
+          <div class="sloth-cheek left"></div>
+          <div class="sloth-cheek right"></div>
+          <div class="sloth-smile"></div>
+        </div>
+      </div>
+    </div>
+    <div class="cta-row">
+      <a href="adventures.html" class="btn btn-primary">Read Teddy's Adventures &rarr;</a>
+      <a href="guestbook.html" class="btn btn-ghost">Sign the Guestbook</a>
+    </div>
+  </div>
+</section>
+
+<!-- Variation B: Storybook spread with real hero image -->
+<section class="heroB" data-variant="B" id="heroB" style="display:none;">
+  <div class="cloud-blob blob1"></div>
+  <div class="text-side">
+    <span class="eyebrow">Once upon a time...</span>
+    <h1 class="h-display" style="margin-top: 16px;">A world<br>made just for<br>Clara.</h1>
+    <p class="subhead" style="margin-left: 0; max-width: 100%;">Grab Teddy, hop on a unicorn, and follow the rainbow to where the sloths live. Adventures await!</p>
+    <div class="cta-row" style="display: flex; gap: 14px; margin-top: 32px; flex-wrap: wrap;">
+      <a href="adventures.html" class="btn btn-primary">Open the storybook &rarr;</a>
+      <a href="guestbook.html" class="btn btn-ghost">Sign the guestbook</a>
+    </div>
+  </div>
+  <div class="visual-side" style="padding: 0; overflow: hidden;">
+    <img src="images/clara-giraffe.png" alt="Giraffe holding a sign that says For you, Clara!" style="width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 50px;" />
+  </div>
+</section>
+
+<!-- Variation C: Big name -->
+<section class="heroC" data-variant="C" id="heroC" style="display:none;">
+  <div class="cloud-blob blob1"></div>
+  <div class="container">
+    <span class="eyebrow">Welcome to my world</span>
+    <h1 class="name"><span class="name-deco">CLARA</span></h1>
+    <p class="subhead" style="margin-top: 24px;">Age 4 &middot; Chief Sparkle Officer &middot; Best friend of Teddy</p>
+    <div class="floating-friends">
+      <div class="unicorn bounce">
+        <div class="unicorn-mane"></div>
+        <div class="unicorn-tail"></div>
+        <div class="unicorn-body"></div>
+        <div class="unicorn-head">
+          <div class="unicorn-horn"></div>
+          <div class="unicorn-eye"></div>
+          <div class="unicorn-cheek"></div>
+        </div>
+        <div class="unicorn-leg l1"></div>
+        <div class="unicorn-leg l2"></div>
+        <div class="unicorn-leg l3"></div>
+        <div class="unicorn-leg l4"></div>
+      </div>
+      <div class="teddy bounce-slow">
+        <div class="teddy-ear left"></div>
+        <div class="teddy-ear right"></div>
+        <div class="teddy-head">
+          <div class="teddy-eye left"></div>
+          <div class="teddy-eye right"></div>
+          <div class="teddy-cheek left"></div>
+          <div class="teddy-cheek right"></div>
+          <div class="teddy-nose"></div>
+          <div class="teddy-mouth"></div>
+        </div>
+        <div class="teddy-body"></div>
+        <div class="teddy-arm left"></div>
+        <div class="teddy-arm right"></div>
+        <div class="teddy-star">&#x2605;</div>
+      </div>
+      <div class="sloth bounce">
+        <div class="sloth-rainbow"></div>
+        <div class="sloth-arm left"></div>
+        <div class="sloth-arm right"></div>
+        <div class="sloth-body"></div>
+        <div class="sloth-face">
+          <div class="sloth-stripe"></div>
+          <div class="sloth-eye left"></div>
+          <div class="sloth-eye right"></div>
+          <div class="sloth-cheek left"></div>
+          <div class="sloth-cheek right"></div>
+          <div class="sloth-smile"></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex; gap: 14px; justify-content: center; margin-top: 36px; flex-wrap: wrap;">
+      <a href="adventures.html" class="btn btn-primary">Adventures &rarr;</a>
+      <a href="guestbook.html" class="btn btn-ghost">Guestbook</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>Made with <span class="footer-heart">&#x1F496;</span> for Clara, by Uncle Madeleine</p>
+  <p style="margin-top: 6px; font-size: 12px;">Psst... try clicking anywhere and look for a hidden Teddy</p>
+</footer>
+
+<script src="magic.js"></script>
+<script>
+// Hero variant switching via URL hash
+(function() {
+  var variants = ['A', 'B', 'C'];
+  function show(v) {
+    variants.forEach(function(x) {
+      var el = document.getElementById('hero' + x);
+      if (el) el.style.display = (x === v) ? '' : 'none';
+    });
+  }
+  var hash = (location.hash || '').replace('#', '');
+  if (variants.indexOf(hash) !== -1) {
+    show(hash);
+  }
+  window.addEventListener('hashchange', function() {
+    var h = (location.hash || '').replace('#', '');
+    if (variants.indexOf(h) !== -1) show(h);
+  });
+})();
+</script>
+</body>
+</html>

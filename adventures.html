@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Teddy's Adventures · Clara's Magical World</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+.adv-header {
+  text-align: center;
+  padding: 30px 24px 50px;
+  position: relative;
+}
+.adv-header .blob1 { width: 400px; height: 400px; background: var(--cotton); top: -100px; left: -50px; }
+.adv-header .blob2 { width: 320px; height: 320px; background: var(--lavender); top: 20px; right: -50px; }
+
+.story-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+  max-width: 1100px;
+  margin: 0 auto 60px;
+  padding: 0 24px;
+}
+@media (max-width: 800px) { .story-grid { grid-template-columns: 1fr; } }
+
+.story-card {
+  background: white;
+  border-radius: var(--r-lg);
+  padding: 0;
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 250ms, box-shadow 250ms;
+  position: relative;
+}
+.story-card:hover { transform: translateY(-6px) rotate(-0.5deg); box-shadow: var(--shadow-pop); }
+.story-cover {
+  height: 200px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.story-cover.c1 { background: linear-gradient(135deg, #ffd6ec, #c8b3ff); }
+.story-cover.c2 { background: linear-gradient(135deg, #cfe9ff, #d4f5e8); }
+.story-cover.c3 { background: linear-gradient(135deg, #fff3b8, #ffd4b8); }
+.story-cover.c4 { background: linear-gradient(135deg, #e8dcff, #ffd6ec); }
+.story-cover img { width: 90%; height: 90%; object-fit: contain; }
+.story-cover .emoji-cover {
+  font-size: 90px;
+  filter: drop-shadow(0 4px 8px rgba(180,120,200,0.3));
+}
+.story-meta {
+  padding: 20px 24px 24px;
+}
+.story-meta .ep {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cotton-ink);
+  font-weight: 600;
+}
+.story-meta h3 {
+  margin-top: 6px;
+  font-size: 24px;
+  color: var(--lavender-ink);
+}
+.story-meta p {
+  margin-top: 8px;
+  color: var(--ink-soft);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.story-meta .read {
+  margin-top: 14px;
+  display: inline-block;
+  color: var(--cotton-ink);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Story modal/reader */
+.reader {
+  position: fixed;
+  inset: 0;
+  background: rgba(74, 56, 104, 0.5);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fade-in 250ms ease-out;
+}
+.reader.open { display: flex; }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+.reader-inner {
+  background: white;
+  border-radius: var(--r-lg);
+  width: 100%;
+  max-width: 720px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: pop-in 350ms cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes pop-in {
+  from { transform: scale(0.85); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+.reader-cover {
+  height: 220px;
+  display: grid; place-items: center;
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+}
+.reader-cover .emoji-cover { font-size: 110px; }
+.reader-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: white;
+  font-size: 20px;
+  color: var(--cotton-ink);
+  display: grid; place-items: center;
+  box-shadow: var(--shadow-soft);
+  z-index: 2;
+}
+.reader-body {
+  padding: 32px 36px 40px;
+}
+.reader-body .ep { font-family: 'Fredoka'; font-size: 12px; color: var(--cotton-ink); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+.reader-body h2 { font-size: 32px; color: var(--lavender-ink); margin-top: 6px; }
+.reader-body .story-text {
+  margin-top: 20px;
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.reader-body .story-text p { margin: 0 0 16px; }
+.reader-body .story-text .drop {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 56px;
+  float: left;
+  line-height: 0.9;
+  margin: 4px 10px 0 0;
+  background: linear-gradient(135deg, var(--cotton-ink), var(--lavender-ink));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.reader-nav {
+  display: flex; justify-content: space-between; gap: 12px;
+  margin-top: 32px;
+}
+
+/* Featured sloth section */
+.sloth-feature {
+  max-width: 1100px;
+  margin: 40px auto 60px;
+  padding: 0 24px;
+}
+.sloth-feature .inner {
+  background: white;
+  border-radius: var(--r-lg);
+  padding: 40px;
+  box-shadow: var(--shadow-soft);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+@media (max-width: 800px) { .sloth-feature .inner { grid-template-columns: 1fr; } }
+.sloth-feature img {
+  width: 100%; border-radius: var(--r-md);
+  box-shadow: var(--shadow-soft);
+}
+.sloth-feature h2 { font-size: 36px; color: var(--lavender-ink); }
+.sloth-feature p { font-size: 17px; color: var(--ink-soft); line-height: 1.6; margin-top: 12px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-brand">
+    <span class="nav-brand-icon">🦄</span>
+    <span>Clara's Magical World</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="adventures.html" class="nav-link active">Teddy's Adventures</a>
+    <a href="guestbook.html" class="nav-link">Guestbook</a>
+  </div>
+</nav>
+
+<header class="adv-header">
+  <div class="cloud-blob blob1"></div>
+  <div class="cloud-blob blob2"></div>
+  <div class="container">
+    <span class="eyebrow">🧸 Story Time</span>
+    <h1 class="h-display" style="margin-top: 16px;">Teddy's Adventures</h1>
+    <p style="font-size: 18px; color: var(--ink-soft); margin-top: 16px; max-width: 540px; margin-left: auto; margin-right: auto; text-wrap: pretty;">
+      Tap any story to read about Teddy and his magical friends — the rainbow sloth, the unicorn, and Clara, of course!
+    </p>
+  </div>
+</header>
+
+<section class="story-grid" id="storyGrid"></section>
+
+<section class="sloth-feature">
+  <div class="inner">
+    <img src="images/rainbow-sloth.png" alt="Rainbow sloth in the forest" />
+    <div>
+      <span class="eyebrow">🌈 Meet the Cast</span>
+      <h2 style="margin-top: 12px;">This is Skittles, the Rainbow Sloth.</h2>
+      <p>Skittles lives in a sparkly forest where the leaves change color every time you giggle. He moves <em>very</em> slowly, but he has the biggest heart of any sloth in the whole world. He's Teddy's best friend (after Clara, of course!).</p>
+      <p style="margin-top: 16px;">Did you know? Skittles wears tiny rainbow glasses because the sunbeams are extra sparkly in his forest. ✨</p>
+    </div>
+  </div>
+</section>
+
+<!-- Reader modal -->
+<div class="reader" id="reader" role="dialog" aria-modal="true">
+  <div class="reader-inner">
+    <button class="reader-close" id="readerClose" aria-label="Close">✕</button>
+    <div class="reader-cover" id="readerCover"></div>
+    <div class="reader-body">
+      <div class="ep" id="readerEp"></div>
+      <h2 id="readerTitle"></h2>
+      <div class="story-text" id="readerText"></div>
+      <div class="reader-nav">
+        <button class="btn btn-ghost" id="prevStory">← Previous</button>
+        <button class="btn btn-primary" id="nextStory">Next story →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <p>Made with <span class="footer-heart">💖</span> for Clara, by Uncle Madeleine</p>
+</footer>
+
+<script src="magic.js"></script>
+<script>
+const STORIES = [
+  {
+    ep: "Adventure 1",
+    title: "Teddy and the Cloud Bouncy Castle",
+    cover: "c1",
+    icon: "☁️🧸",
+    text: [
+      "One sunny morning, Clara and Teddy looked up at the sky. The clouds were extra fluffy today — like big piles of marshmallows!",
+      "\"I bet you could bounce on those,\" said Clara, hugging Teddy close. The little gold star on Teddy's belly began to glow…",
+      "WHOOSH! Up they floated, all the way to the biggest, bounciest cloud. BOING! BOING! BOING! Teddy went flying higher than the rooftops, higher than the birds, higher than the kites!",
+      "When they finally floated back down, Teddy whispered, \"Let's do that again tomorrow.\" And the star on his belly twinkled — yes."
+    ]
+  },
+  {
+    ep: "Adventure 2",
+    title: "Skittles the Rainbow Sloth Throws a Party",
+    cover: "c2",
+    icon: "🌈🦥",
+    text: [
+      "Deep in the sparkle forest, Skittles the rainbow sloth was planning a party. \"Slowwwly,\" he said, \"because the best parties take time.\"",
+      "He invited Teddy. He invited Clara. He invited a unicorn named Periwinkle. He even invited a butterfly who turned out to be his cousin.",
+      "There were rainbow cupcakes (one of every color), a juice fountain that poured out giggles, and music made by tickling the leaves.",
+      "Teddy danced so hard his star fell off — but a friendly firefly stuck it back on. \"Best. Party. Everrrrr,\" said Skittles, very slowly. Everyone agreed."
+    ]
+  },
+  {
+    ep: "Adventure 3",
+    title: "Periwinkle the Unicorn Loses Her Sparkle",
+    cover: "c3",
+    icon: "🦄✨",
+    text: [
+      "One morning, Periwinkle the unicorn woke up and her horn wouldn't sparkle. Not even a little bit!",
+      "\"Don't worry,\" said Clara, scooping up Teddy. \"We'll find your sparkle.\" They searched in the meadow. They searched in the stream. They searched inside a daisy.",
+      "Finally, Teddy gave Periwinkle the biggest, squishiest, warmest hug a teddy bear has ever given. The star on his belly glowed extra bright…",
+      "…and ZING! Periwinkle's horn lit up like a hundred fireworks! \"Sparkle is made of love,\" Clara whispered. Teddy nodded. He had known that all along."
+    ]
+  },
+  {
+    ep: "Adventure 4",
+    title: "The Great Cookie Mystery",
+    cover: "c4",
+    icon: "🍪🔍",
+    text: [
+      "Someone had eaten ALL the rainbow cookies. Crumbs led from the kitchen, around the couch, and into Clara's bedroom.",
+      "Teddy looked very innocent. Maybe a little TOO innocent.",
+      "Clara held up a cookie crumb. She looked at Teddy. She looked at the crumb. She looked at Teddy. There was the tiniest sprinkle of pink frosting on Teddy's nose.",
+      "\"Oh Teddy,\" giggled Clara. \"Next time, save me one!\" Teddy's star twinkled twice, which is bear language for \"I will, I promise.\""
+    ]
+  },
+  {
+    ep: "Adventure 5",
+    title: "Teddy's Star Goes on Vacation",
+    cover: "c1",
+    icon: "⭐🧳",
+    text: [
+      "One night, the little star on Teddy's belly decided it wanted to see the real stars in the sky. ZIP! Off it flew, leaving Teddy with a star-shaped empty spot.",
+      "Clara hugged Teddy close. \"Don't worry,\" she said. \"Stars always come home.\"",
+      "Up in the sky, Teddy's star met all the BIG stars. They taught it twinkle tricks and let it ride on a shooting comet.",
+      "When it came home in the morning, Teddy's star sparkled brighter than ever — full of stories. And Teddy felt a little extra magical, just from listening."
+    ]
+  },
+  {
+    ep: "Adventure 6",
+    title: "A Letter From Uncle Madeleine",
+    cover: "c2",
+    icon: "💌🦄",
+    text: [
+      "One day a letter arrived for Clara. It came in a pink envelope with a wax seal shaped like a star.",
+      "\"Dear Clara,\" the letter said. \"I made you a magical website. I hope you and Teddy have lots of adventures there. Love, Uncle Madeleine.\"",
+      "Teddy gave the letter a tiny bear kiss. Clara hugged Teddy and said, \"We have the best uncle in the whole rainbow.\"",
+      "And somewhere far away, a unicorn delivered the reply. It said only one word, in glittery pink crayon: \"💖\""
+    ]
+  }
+];
+
+const grid = document.getElementById('storyGrid');
+STORIES.forEach((s, i) => {
+  const card = document.createElement('div');
+  card.className = 'story-card';
+  card.innerHTML = `
+    <div class="story-cover ${s.cover}"><div class="emoji-cover">${s.icon}</div></div>
+    <div class="story-meta">
+      <div class="ep">${s.ep}</div>
+      <h3>${s.title}</h3>
+      <p>${s.text[0].slice(0, 80)}…</p>
+      <div class="read">Read the story →</div>
+    </div>
+  `;
+  card.addEventListener('click', (e) => { e.stopPropagation(); openReader(i); });
+  grid.appendChild(card);
+});
+
+const reader = document.getElementById('reader');
+const readerCover = document.getElementById('readerCover');
+const readerEp = document.getElementById('readerEp');
+const readerTitle = document.getElementById('readerTitle');
+const readerText = document.getElementById('readerText');
+let currentStory = 0;
+
+function openReader(i) {
+  currentStory = i;
+  const s = STORIES[i];
+  readerCover.className = 'reader-cover ' + s.cover;
+  readerCover.innerHTML = `<div class="emoji-cover">${s.icon}</div>`;
+  readerEp.textContent = s.ep;
+  readerTitle.textContent = s.title;
+  readerText.innerHTML = s.text.map((p, idx) => {
+    if (idx === 0) {
+      return `<p><span class="drop">${p[0]}</span>${p.slice(1)}</p>`;
+    }
+    return `<p>${p}</p>`;
+  }).join('');
+  reader.classList.add('open');
+  reader.querySelector('.reader-inner').scrollTop = 0;
+}
+function closeReader() { reader.classList.remove('open'); }
+
+document.getElementById('readerClose').addEventListener('click', (e) => { e.stopPropagation(); closeReader(); });
+reader.addEventListener('click', (e) => { if (e.target === reader) closeReader(); });
+document.getElementById('prevStory').addEventListener('click', (e) => { e.stopPropagation(); openReader((currentStory - 1 + STORIES.length) % STORIES.length); });
+document.getElementById('nextStory').addEventListener('click', (e) => { e.stopPropagation(); openReader((currentStory + 1) % STORIES.length); });
+document.addEventListener('keydown', (e) => {
+  if (!reader.classList.contains('open')) return;
+  if (e.key === 'Escape') closeReader();
+  if (e.key === 'ArrowLeft') openReader((currentStory - 1 + STORIES.length) % STORIES.length);
+  if (e.key === 'ArrowRight') openReader((currentStory + 1) % STORIES.length);
+});
+</script>
+</body>
+</html>

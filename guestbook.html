@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Guestbook · Clara's Magical World</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+.gb-header { text-align: center; padding: 30px 24px 30px; position: relative; }
+.gb-header .blob1 { width: 380px; height: 380px; background: var(--cotton); top: -100px; left: -50px; }
+.gb-header .blob2 { width: 320px; height: 320px; background: var(--lavender); top: 0; right: -50px; }
+
+.gb-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 36px;
+  max-width: 1100px;
+  margin: 0 auto 60px;
+  padding: 0 24px;
+  align-items: start;
+}
+@media (max-width: 800px) { .gb-layout { grid-template-columns: 1fr; } }
+
+.gb-form-card {
+  background: white;
+  border-radius: var(--r-lg);
+  padding: 32px;
+  box-shadow: var(--shadow-soft);
+  position: sticky;
+  top: 24px;
+}
+.gb-form-card h2 { font-size: 26px; color: var(--lavender-ink); }
+.gb-form-card p.lead { color: var(--ink-soft); font-size: 15px; margin-top: 8px; }
+
+.field { margin-top: 18px; }
+.field label {
+  display: block;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--lavender-ink);
+  margin-bottom: 8px;
+}
+.field input, .field textarea {
+  width: 100%;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 16px;
+  padding: 14px 18px;
+  border: 2px solid var(--lavender);
+  border-radius: var(--r-md);
+  background: #fff8fb;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 200ms, box-shadow 200ms;
+  resize: vertical;
+}
+.field input:focus, .field textarea:focus {
+  border-color: var(--cotton-deep);
+  box-shadow: 0 0 0 4px rgba(255, 179, 217, 0.25);
+}
+.field textarea { min-height: 90px; }
+
+.color-row {
+  display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap;
+}
+.color-pick {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid white;
+  box-shadow: 0 0 0 2px rgba(180,120,200,0.15);
+  transition: transform 150ms, box-shadow 150ms;
+}
+.color-pick:hover { transform: scale(1.15); }
+.color-pick.selected {
+  transform: scale(1.2);
+  box-shadow: 0 0 0 3px var(--lavender-ink);
+}
+
+.icon-row {
+  display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;
+}
+.icon-pick {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 22px;
+  background: rgba(232, 220, 255, 0.5);
+  cursor: pointer;
+  transition: all 150ms;
+}
+.icon-pick:hover { transform: scale(1.15); background: var(--lavender); }
+.icon-pick.selected { background: linear-gradient(135deg, var(--cotton-deep), var(--lavender-deep)); transform: scale(1.15); }
+
+.submit-row { margin-top: 24px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;}
+
+.gb-list { display: flex; flex-direction: column; gap: 18px; }
+.gb-empty {
+  text-align: center;
+  padding: 60px 24px;
+  color: var(--ink-soft);
+  background: rgba(255,255,255,0.5);
+  border-radius: var(--r-lg);
+  border: 3px dashed var(--lavender-deep);
+}
+.gb-empty .big { font-size: 60px; margin-bottom: 12px; display: block; }
+
+.gb-msg {
+  background: white;
+  border-radius: var(--r-md);
+  padding: 22px 24px;
+  box-shadow: var(--shadow-soft);
+  position: relative;
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 16px;
+  animation: msg-pop 400ms cubic-bezier(.34,1.56,.64,1);
+  border-left: 6px solid var(--cotton-deep);
+}
+@keyframes msg-pop {
+  from { opacity: 0; transform: translateY(8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.gb-msg .avatar {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 28px;
+}
+.gb-msg .meta {
+  display: flex; justify-content: space-between; align-items: baseline;
+  flex-wrap: wrap; gap: 8px;
+}
+.gb-msg .name {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--lavender-ink);
+}
+.gb-msg .when {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.gb-msg .body {
+  margin-top: 6px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.gb-msg .heart-btn {
+  margin-top: 10px;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255, 214, 236, 0.5);
+  color: var(--cotton-ink);
+  padding: 6px 14px;
+  border-radius: var(--r-pill);
+  font-weight: 600;
+  font-size: 13px;
+  font-family: 'Fredoka', sans-serif;
+  transition: transform 120ms, background 200ms;
+}
+.gb-msg .heart-btn:hover { background: var(--cotton); transform: scale(1.05); }
+.gb-msg .heart-btn.liked { background: linear-gradient(135deg, var(--cotton-deep), var(--lavender-deep)); color: white; }
+
+.gb-count {
+  text-align: center;
+  font-family: 'Fredoka', sans-serif;
+  color: var(--lavender-ink);
+  font-size: 16px;
+  margin-bottom: 18px;
+}
+
+.seed-banner {
+  background: rgba(255,255,255,0.6);
+  border: 2px dashed var(--lavender-deep);
+  padding: 14px 18px;
+  border-radius: var(--r-md);
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+  text-align: center;
+}
+.seed-banner button {
+  margin-left: 8px;
+  background: none;
+  color: var(--cotton-ink);
+  font-weight: 600;
+  text-decoration: underline;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-brand">
+    <span class="nav-brand-icon">🦄</span>
+    <span>Clara's Magical World</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="adventures.html" class="nav-link">Teddy's Adventures</a>
+    <a href="guestbook.html" class="nav-link active">Guestbook</a>
+  </div>
+</nav>
+
+<header class="gb-header">
+  <div class="cloud-blob blob1"></div>
+  <div class="cloud-blob blob2"></div>
+  <div class="container">
+    <span class="eyebrow">💌 Family Guestbook</span>
+    <h1 class="h-display" style="margin-top: 16px;">Leave Clara<br>a sparkly note ✨</h1>
+    <p style="font-size: 18px; color: var(--ink-soft); margin-top: 16px; max-width: 540px; margin-left: auto; margin-right: auto; text-wrap: pretty;">
+      Family and friends — write Clara something nice! Your message stays right here on her page so she can read it again and again.
+    </p>
+  </div>
+</header>
+
+<section class="gb-layout">
+  <!-- Form -->
+  <div class="gb-form-card">
+    <h2>Write a note 💖</h2>
+    <p class="lead">Pick your color, your sparkle critter, and tell Clara what you love about her!</p>
+
+    <div class="field">
+      <label for="gbName">Your name</label>
+      <input id="gbName" type="text" placeholder="e.g. Uncle Madeleine" maxlength="40" />
+    </div>
+
+    <div class="field">
+      <label for="gbMessage">Your message</label>
+      <textarea id="gbMessage" placeholder="Dear Clara, you are the sparkliest…" maxlength="400"></textarea>
+    </div>
+
+    <div class="field">
+      <label>Pick a color</label>
+      <div class="color-row" id="colorRow">
+        <div class="color-pick selected" data-color="#ffb3d9" style="background:#ffb3d9"></div>
+        <div class="color-pick" data-color="#c8b3ff" style="background:#c8b3ff"></div>
+        <div class="color-pick" data-color="#ffd4b8" style="background:#ffd4b8"></div>
+        <div class="color-pick" data-color="#fff3b8" style="background:#fff3b8"></div>
+        <div class="color-pick" data-color="#d4f5e8" style="background:#d4f5e8"></div>
+        <div class="color-pick" data-color="#cfe9ff" style="background:#cfe9ff"></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Pick a sparkle critter</label>
+      <div class="icon-row" id="iconRow">
+        <div class="icon-pick selected" data-icon="🦄">🦄</div>
+        <div class="icon-pick" data-icon="🧸">🧸</div>
+        <div class="icon-pick" data-icon="🦥">🦥</div>
+        <div class="icon-pick" data-icon="🌈">🌈</div>
+        <div class="icon-pick" data-icon="⭐">⭐</div>
+        <div class="icon-pick" data-icon="💖">💖</div>
+        <div class="icon-pick" data-icon="🦒">🦒</div>
+        <div class="icon-pick" data-icon="🌸">🌸</div>
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <button class="btn btn-primary" id="submitBtn">✨ Send to Clara</button>
+      <span id="formHint" style="font-size: 13px; color: var(--ink-soft);">Saved on this device</span>
+    </div>
+  </div>
+
+  <!-- List -->
+  <div>
+    <div class="gb-count" id="gbCount"></div>
+    <div class="seed-banner" id="seedBanner">
+      📝 This guestbook saves notes in your browser. To make Clara's notes appear for everyone, share the page link or take a screenshot!
+    </div>
+    <div class="gb-list" id="gbList"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>Made with <span class="footer-heart">💖</span> for Clara, by Uncle Madeleine</p>
+</footer>
+
+<script src="magic.js"></script>
+<script>
+const STORAGE_KEY = 'clara-guestbook-v1';
+const SEED = [
+  { name: 'Uncle Madeleine', color: '#c8b3ff', icon: '🦄', body: "Clara! I made this whole magical website just for you. I hope you and Teddy have a million adventures. Love you to the moon and back. ✨", ts: Date.now() - 1000*60*60*24*2, likes: 7 },
+  { name: 'Teddy 🧸 (the bear)', color: '#ffb3d9', icon: '🧸', body: "Best. Friend. Ever. My star says hi too! ⭐", ts: Date.now() - 1000*60*60*5, likes: 12 },
+  { name: 'Skittles the Sloth', color: '#fff3b8', icon: '🦥', body: "Heyyyy Claraaaa… you are sparkleeeeeyy… (sloths talk slow, sorry!) 🌈", ts: Date.now() - 1000*60*30, likes: 4 },
+];
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [...SEED];
+    return JSON.parse(raw);
+  } catch (e) { return [...SEED]; }
+}
+function save(msgs) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(msgs)); } catch (e) {}
+}
+
+let messages = load();
+
+const list = document.getElementById('gbList');
+const count = document.getElementById('gbCount');
+
+function timeAgo(ts) {
+  const sec = Math.floor((Date.now() - ts) / 1000);
+  if (sec < 60) return 'just now';
+  const min = Math.floor(sec / 60);
+  if (min < 60) return min + (min === 1 ? ' minute ago' : ' minutes ago');
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return hr + (hr === 1 ? ' hour ago' : ' hours ago');
+  const d = Math.floor(hr / 24);
+  return d + (d === 1 ? ' day ago' : ' days ago');
+}
+
+function render() {
+  list.innerHTML = '';
+  count.textContent = `${messages.length} sparkly note${messages.length === 1 ? '' : 's'} for Clara 💌`;
+  const sorted = [...messages].sort((a, b) => b.ts - a.ts);
+  sorted.forEach((m, idx) => {
+    const el = document.createElement('div');
+    el.className = 'gb-msg';
+    el.style.borderLeftColor = m.color;
+    el.innerHTML = `
+      <div class="avatar" style="background: ${m.color}">${m.icon}</div>
+      <div>
+        <div class="meta">
+          <span class="name">${escapeHtml(m.name)}</span>
+          <span class="when">${timeAgo(m.ts)}</span>
+        </div>
+        <div class="body">${escapeHtml(m.body)}</div>
+        <button class="heart-btn ${m.liked ? 'liked' : ''}" data-idx="${idx}">
+          💖 <span>${m.likes || 0}</span>
+        </button>
+      </div>
+    `;
+    list.appendChild(el);
+  });
+
+  list.querySelectorAll('.heart-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const sortedIdx = parseInt(btn.dataset.idx, 10);
+      const m = sorted[sortedIdx];
+      const realIdx = messages.indexOf(m);
+      if (realIdx === -1) return;
+      messages[realIdx].liked = !messages[realIdx].liked;
+      messages[realIdx].likes = (messages[realIdx].likes || 0) + (messages[realIdx].liked ? 1 : -1);
+      save(messages);
+      render();
+      if (messages[realIdx].liked) {
+        const r = btn.getBoundingClientRect();
+        if (window.MagicSparkle) MagicSparkle.burstAt(r.left + r.width/2, r.top + r.height/2, 8);
+      }
+    });
+  });
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[c]);
+}
+
+// color + icon picking
+let selColor = '#ffb3d9';
+let selIcon = '🦄';
+document.getElementById('colorRow').addEventListener('click', (e) => {
+  const el = e.target.closest('.color-pick');
+  if (!el) return;
+  e.stopPropagation();
+  selColor = el.dataset.color;
+  document.querySelectorAll('#colorRow .color-pick').forEach(x => x.classList.toggle('selected', x === el));
+});
+document.getElementById('iconRow').addEventListener('click', (e) => {
+  const el = e.target.closest('.icon-pick');
+  if (!el) return;
+  e.stopPropagation();
+  selIcon = el.dataset.icon;
+  document.querySelectorAll('#iconRow .icon-pick').forEach(x => x.classList.toggle('selected', x === el));
+});
+
+document.getElementById('submitBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  const name = document.getElementById('gbName').value.trim();
+  const body = document.getElementById('gbMessage').value.trim();
+  if (!name || !body) {
+    document.getElementById('formHint').textContent = 'Add your name AND a message first!';
+    document.getElementById('formHint').style.color = '#b54a82';
+    return;
+  }
+  messages.push({ name, body, color: selColor, icon: selIcon, ts: Date.now(), likes: 0 });
+  save(messages);
+  render();
+  document.getElementById('gbName').value = '';
+  document.getElementById('gbMessage').value = '';
+  document.getElementById('formHint').textContent = '✨ Sent! Thank you!';
+  document.getElementById('formHint').style.color = 'var(--lavender-ink)';
+  // big celebration
+  const r = e.target.getBoundingClientRect();
+  if (window.MagicSparkle) {
+    for (let i = 0; i < 24; i++) {
+      setTimeout(() => MagicSparkle.spawnSparkle(
+        r.left + r.width/2 + (Math.random()-0.5)*40,
+        r.top + r.height/2 + (Math.random()-0.5)*40
+      ), i * 30);
+    }
+  }
+});
+
+render();
+</script>
+</body>
+</html>
