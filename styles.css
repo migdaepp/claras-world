@@ -178,6 +178,18 @@ a { color: var(--cotton-ink); text-decoration: none; }
   color: white;
   box-shadow: var(--shadow-soft);
 }
+@media (max-width: 640px) {
+  .nav { padding: 14px 16px; justify-content: center; }
+  .nav-brand { font-size: 18px; }
+  .nav-brand-icon { width: 36px; height: 36px; font-size: 18px; }
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    border-radius: var(--r-md);
+    gap: 4px;
+  }
+  .nav-link { padding: 8px 14px; font-size: 13px; }
+}
 
 /* ---------- Buttons ---------- */
 .btn {
