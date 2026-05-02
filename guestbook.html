@@ -201,6 +201,7 @@
   <div class="nav-links">
     <a href="index.html" class="nav-link">Home</a>
     <a href="adventures.html" class="nav-link">Teddy's Adventures</a>
+    <a href="memory.html" class="nav-link">Matching Game</a>
     <a href="guestbook.html" class="nav-link active">Guestbook</a>
   </div>
 </nav>
@@ -259,9 +260,17 @@
       </div>
     </div>
 
+    <div class="field">
+      <label for="gbPassphrase">Family passphrase 🔐</label>
+      <input id="gbPassphrase" type="password" placeholder="the magic word" maxlength="60" autocomplete="off" />
+      <div style="font-size: 12px; color: var(--ink-soft); margin-top: 6px;">
+        Hint: <em>Clara's oldest cousin's name</em>
+      </div>
+    </div>
+
     <div class="submit-row">
       <button class="btn btn-primary" id="submitBtn">✨ Send to Clara</button>
-      <span id="formHint" style="font-size: 13px; color: var(--ink-soft);">Saved on this device</span>
+      <span id="formHint" style="font-size: 13px; color: var(--ink-soft);">Posts go straight to Clara's family album</span>
     </div>
   </div>
 
@@ -269,7 +278,7 @@
   <div>
     <div class="gb-count" id="gbCount"></div>
     <div class="seed-banner" id="seedBanner">
-      📝 This guestbook saves notes in your browser. To make Clara's notes appear for everyone, share the page link or take a screenshot!
+      📝 Loading the family album…
     </div>
     <div class="gb-list" id="gbList"></div>
   </div>
@@ -281,28 +290,97 @@
 
 <script src="magic.js"></script>
 <script>
+// =====================================================================
+// Google Sheets backend wiring
+// =====================================================================
+// Paste your Apps Script Web App URL below to switch from local storage
+// to the family-shared Google Sheet. Until then, the guestbook saves
+// notes in this browser only (good for previewing).
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxCsnYFaraL8thAYF5MrZAxJn8rieagEcXPUxa2KBT0V9EQnWZtNZ1k4NfqplVGYTMx/exec';
+// =====================================================================
+
+const USE_SHEETS = SHEETS_URL && /^https:\/\/script\.google\.com\//.test(SHEETS_URL);
 const STORAGE_KEY = 'clara-guestbook-v1';
+const LIKES_KEY = 'clara-guestbook-likes-v1';
+
 const SEED = [
-  { name: 'Uncle Madeleine', color: '#c8b3ff', icon: '🦄', body: "Clara! I made this whole magical website just for you. I hope you and Teddy have a million adventures. Love you to the moon and back. ✨", ts: Date.now() - 1000*60*60*24*2, likes: 7 },
-  { name: 'Teddy 🧸 (the bear)', color: '#ffb3d9', icon: '🧸', body: "Best. Friend. Ever. My star says hi too! ⭐", ts: Date.now() - 1000*60*60*5, likes: 12 },
-  { name: 'Skittles the Sloth', color: '#fff3b8', icon: '🦥', body: "Heyyyy Claraaaa… you are sparkleeeeeyy… (sloths talk slow, sorry!) 🌈", ts: Date.now() - 1000*60*30, likes: 4 },
+  { name: 'Uncle Madeleine', color: '#c8b3ff', icon: '🦄', body: "Clara! I made this whole magical website just for you. I hope you and Teddy have a million adventures. Love you to the moon and back. ✨", ts: Date.now() - 1000*60*60*24*2 },
+  { name: 'Teddy 🧸 (the bear)', color: '#ffb3d9', icon: '🧸', body: "Best. Friend. Ever. My star says hi too! ⭐", ts: Date.now() - 1000*60*60*5 },
+  { name: 'Skittles the Sloth', color: '#fff3b8', icon: '🦥', body: "Heyyyy Claraaaa… you are sparkleeeeeyy… (sloths talk slow, sorry!) 🌈", ts: Date.now() - 1000*60*30 },
 ];
 
-function load() {
+// Likes are tracked locally per-device — the sheet doesn't store them.
+function loadLikes() {
+  try { return JSON.parse(localStorage.getItem(LIKES_KEY)) || {}; }
+  catch (e) { return {}; }
+}
+function saveLikes(map) {
+  try { localStorage.setItem(LIKES_KEY, JSON.stringify(map)); } catch (e) {}
+}
+
+function localLoad() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return [...SEED];
     return JSON.parse(raw);
   } catch (e) { return [...SEED]; }
 }
-function save(msgs) {
+function localSave(msgs) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(msgs)); } catch (e) {}
 }
 
-let messages = load();
+async function fetchFromSheets() {
+  const r = await fetch(SHEETS_URL);
+  const data = await r.json();
+  return (Array.isArray(data) ? data : []).map(row => {
+    const [icon, color] = String(row.sparkles || '🦄|#c8b3ff').split('|');
+    const tsMs = row.timestamp ? new Date(row.timestamp).getTime() : Date.now();
+    return {
+      id: tsMs, // use timestamp ms as the stable id (server agrees)
+      name: row.name,
+      body: row.message,
+      icon: icon || '🦄',
+      color: color || '#c8b3ff',
+      ts: tsMs,
+      likes: Number(row.likes) || 0,
+      remote: true,
+    };
+  });
+}
+
+async function postToSheets(payload) {
+  // Apps Script accepts simple POST; mode:'no-cors' avoids CORS preflight.
+  // We can't read the response, so we re-fetch the list to confirm.
+  await fetch(SHEETS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload),
+  });
+}
+
+async function postLike(id, unlike) {
+  // Use a real POST (not no-cors) so we can read the updated count back.
+  // Apps Script returns CORS headers for ContentService responses.
+  try {
+    const r = await fetch(SHEETS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'like', id, unlike: !!unlike }),
+      redirect: 'follow',
+    });
+    return await r.json();
+  } catch (err) {
+    return null;
+  }
+}
+
+let messages = [];
+const likes = loadLikes();
 
 const list = document.getElementById('gbList');
 const count = document.getElementById('gbCount');
+const banner = document.getElementById('seedBanner');
 
 function timeAgo(ts) {
   const sec = Math.floor((Date.now() - ts) / 1000);
@@ -315,11 +393,16 @@ function timeAgo(ts) {
   return d + (d === 1 ? ' day ago' : ' days ago');
 }
 
+function msgKey(m) { return m.id || (m.ts + '-' + m.name); }
+
 function render() {
   list.innerHTML = '';
   count.textContent = `${messages.length} sparkly note${messages.length === 1 ? '' : 's'} for Clara 💌`;
   const sorted = [...messages].sort((a, b) => b.ts - a.ts);
-  sorted.forEach((m, idx) => {
+  sorted.forEach((m) => {
+    const key = msgKey(m);
+    const liked = !!likes[key];
+    const total = (m.likes || 0);
     const el = document.createElement('div');
     el.className = 'gb-msg';
     el.style.borderLeftColor = m.color;
@@ -331,8 +414,8 @@ function render() {
           <span class="when">${timeAgo(m.ts)}</span>
         </div>
         <div class="body">${escapeHtml(m.body)}</div>
-        <button class="heart-btn ${m.liked ? 'liked' : ''}" data-idx="${idx}">
-          💖 <span>${m.likes || 0}</span>
+        <button class="heart-btn ${liked ? 'liked' : ''}" data-key="${key}" data-id="${m.id}" ${m.remote ? '' : 'data-local="1"'}>
+          💖 <span>${total}</span>
         </button>
       </div>
     `;
@@ -340,19 +423,34 @@ function render() {
   });
 
   list.querySelectorAll('.heart-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener('click', async (e) => {
       e.stopPropagation();
-      const sortedIdx = parseInt(btn.dataset.idx, 10);
-      const m = sorted[sortedIdx];
-      const realIdx = messages.indexOf(m);
-      if (realIdx === -1) return;
-      messages[realIdx].liked = !messages[realIdx].liked;
-      messages[realIdx].likes = (messages[realIdx].likes || 0) + (messages[realIdx].liked ? 1 : -1);
-      save(messages);
+      const key = btn.dataset.key;
+      const id = btn.dataset.id;
+      const isLocal = btn.dataset.local === '1';
+      const wasLiked = !!likes[key];
+      const willLike = !wasLiked;
+
+      // Optimistic UI update only — flip the heart and bump the count by 1.
+      // The server is authoritative; we'll reconcile when it responds.
+      likes[key] = willLike;
+      saveLikes(likes);
+      const m = messages.find(x => msgKey(x) === key);
+      if (m) m.likes = Math.max(0, (m.likes || 0) + (willLike ? 1 : -1));
       render();
-      if (messages[realIdx].liked) {
+
+      if (willLike) {
         const r = btn.getBoundingClientRect();
         if (window.MagicSparkle) MagicSparkle.burstAt(r.left + r.width/2, r.top + r.height/2, 8);
+      }
+
+      // Persist to sheet for remote messages and reconcile to server count
+      if (USE_SHEETS && !isLocal) {
+        const resp = await postLike(id, !willLike);
+        if (resp && resp.ok && typeof resp.likes === 'number' && m) {
+          m.likes = resp.likes;
+          render();
+        }
       }
     });
   });
@@ -382,24 +480,14 @@ document.getElementById('iconRow').addEventListener('click', (e) => {
   document.querySelectorAll('#iconRow .icon-pick').forEach(x => x.classList.toggle('selected', x === el));
 });
 
-document.getElementById('submitBtn').addEventListener('click', (e) => {
-  e.stopPropagation();
-  const name = document.getElementById('gbName').value.trim();
-  const body = document.getElementById('gbMessage').value.trim();
-  if (!name || !body) {
-    document.getElementById('formHint').textContent = 'Add your name AND a message first!';
-    document.getElementById('formHint').style.color = '#b54a82';
-    return;
-  }
-  messages.push({ name, body, color: selColor, icon: selIcon, ts: Date.now(), likes: 0 });
-  save(messages);
-  render();
-  document.getElementById('gbName').value = '';
-  document.getElementById('gbMessage').value = '';
-  document.getElementById('formHint').textContent = '✨ Sent! Thank you!';
-  document.getElementById('formHint').style.color = 'var(--lavender-ink)';
-  // big celebration
-  const r = e.target.getBoundingClientRect();
+function setHint(text, color) {
+  const h = document.getElementById('formHint');
+  h.textContent = text;
+  h.style.color = color || 'var(--ink-soft)';
+}
+
+function celebrate(target) {
+  const r = target.getBoundingClientRect();
   if (window.MagicSparkle) {
     for (let i = 0; i < 24; i++) {
       setTimeout(() => MagicSparkle.spawnSparkle(
@@ -408,9 +496,100 @@ document.getElementById('submitBtn').addEventListener('click', (e) => {
       ), i * 30);
     }
   }
+}
+
+document.getElementById('submitBtn').addEventListener('click', async (e) => {
+  e.stopPropagation();
+  const btn = document.getElementById('submitBtn');
+  const name = document.getElementById('gbName').value.trim();
+  const body = document.getElementById('gbMessage').value.trim();
+  const passphrase = document.getElementById('gbPassphrase').value.trim();
+
+  if (!name || !body) {
+    setHint('Add your name AND a message first!', '#b54a82');
+    return;
+  }
+  if (USE_SHEETS && !passphrase) {
+    setHint('You need the family passphrase to post ✨', '#b54a82');
+    return;
+  }
+
+  if (!USE_SHEETS) {
+    // Preview mode — saves locally, no passphrase check.
+    const newMsg = { name, body, color: selColor, icon: selIcon, ts: Date.now(), id: Date.now()+'-'+name };
+    const all = localLoad();
+    all.push(newMsg);
+    localSave(all);
+    messages = all;
+    render();
+    document.getElementById('gbName').value = '';
+    document.getElementById('gbMessage').value = '';
+    setHint('✨ Saved (preview mode — wire up the sheet to share with family)', 'var(--lavender-ink)');
+    celebrate(e.target);
+    return;
+  }
+
+  // Sheets path
+  btn.disabled = true;
+  setHint('Sending…');
+  try {
+    const sparkles = `${selIcon}|${selColor}`;
+    await postToSheets({ name, message: body, sparkles, passphrase });
+
+    // Re-fetch to verify the message landed (passphrase may have been wrong).
+    const before = messages.length;
+    let arrived = false;
+    for (let i = 0; i < 4 && !arrived; i++) {
+      await new Promise(r => setTimeout(r, 600));
+      try {
+        const fresh = await fetchFromSheets();
+        if (fresh.length > before || fresh.some(m => m.body === body && m.name === name && Date.now() - m.ts < 60000)) {
+          messages = fresh;
+          arrived = true;
+        }
+      } catch (err) { /* try again */ }
+    }
+
+    if (arrived) {
+      render();
+      document.getElementById('gbName').value = '';
+      document.getElementById('gbMessage').value = '';
+      document.getElementById('gbPassphrase').value = '';
+      setHint('✨ Sent! Clara is going to love it.', 'var(--lavender-ink)');
+      celebrate(e.target);
+    } else {
+      setHint("Hmm, that doesn't match — ask Uncle Madeleine for the magic words ✨", '#b54a82');
+    }
+  } catch (err) {
+    setHint("Couldn't reach the family album. Try again in a moment?", '#b54a82');
+  } finally {
+    btn.disabled = false;
+  }
 });
 
-render();
+// initial load
+(async function init() {
+  if (!USE_SHEETS) {
+    messages = localLoad();
+    banner.innerHTML = '📝 <strong>Preview mode</strong> — notes are saved in this browser only. Add your <code>SHEETS_URL</code> in <code>guestbook.html</code> to share with family.';
+    // Hide passphrase field in preview mode
+    const ppField = document.getElementById('gbPassphrase').closest('.field');
+    if (ppField) ppField.style.display = 'none';
+    render();
+    return;
+  }
+  banner.style.display = 'none';
+  try {
+    messages = await fetchFromSheets();
+    if (messages.length === 0) messages = [...SEED];
+    render();
+  } catch (err) {
+    banner.style.display = '';
+    banner.innerHTML = "⚠️ Couldn't load the family album. Showing sample notes for now.";
+    messages = [...SEED];
+    render();
+  }
+})();
 </script>
 </body>
 </html>

@@ -157,6 +157,77 @@
   margin-top: 32px;
 }
 
+/* Featured cast hero — the whole crew portrait */
+.cast-hero {
+  max-width: 1200px;
+  margin: 0 auto 50px;
+  padding: 0 24px;
+}
+.cast-hero .frame {
+  position: relative;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: 0 30px 60px -20px rgba(155, 110, 200, 0.35);
+}
+.cast-hero .frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.cast-hero .frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(45, 25, 65, 0.55) 100%);
+  pointer-events: none;
+}
+.cast-hero .caption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 28px 32px;
+  color: white;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  z-index: 1;
+}
+.cast-hero .caption h2 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: clamp(28px, 4vw, 44px);
+  margin: 0 0 6px;
+  text-shadow: 0 2px 12px rgba(45, 25, 65, 0.5);
+}
+.cast-hero .caption p {
+  margin: 0;
+  font-size: 16px;
+  opacity: 0.95;
+  max-width: 560px;
+  text-shadow: 0 1px 6px rgba(45, 25, 65, 0.5);
+}
+.cast-hero .caption .eyebrow {
+  background: rgba(255, 255, 255, 0.95);
+}
+.cast-hero .crew-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.cast-hero .crew-tags span {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: var(--r-pill);
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+}
+@media (max-width: 700px) {
+  .cast-hero .caption { padding: 18px 20px; }
+}
+
 /* Featured sloth section */
 .sloth-feature {
   max-width: 1100px;
@@ -192,6 +263,7 @@
   <div class="nav-links">
     <a href="index.html" class="nav-link">Home</a>
     <a href="adventures.html" class="nav-link active">Teddy's Adventures</a>
+    <a href="memory.html" class="nav-link">Matching Game</a>
     <a href="guestbook.html" class="nav-link">Guestbook</a>
   </div>
 </nav>
@@ -209,6 +281,35 @@
 </header>
 
 <section class="story-grid" id="storyGrid"></section>
+
+<section class="cast-hero">
+  <div class="frame">
+    <img src="images/clara-crew.png" alt="The whole rainbow crew — sloth, frog, cat, teddy, giraffe, turtle, porcupine, unicorn and bunny under a starry sunset sky" />
+    <div class="caption">
+      <div>
+        <span class="eyebrow">🌈 Meet the Whole Cast</span>
+        <h2 style="margin-top: 12px;">Everyone Clara loves, in one starry portrait.</h2>
+        <p>Skittles the rainbow sloth, Pip the frog, Whiskers the cat, Teddy the bear, Gigi the giraffe with her heart, Shelly the turtle, Quill the porcupine, Periwinkle the unicorn, and Mochi the bunny — all together under a magical sunset sky.</p>
+        <div class="crew-tags">
+          <span>🦄 Periwinkle</span>
+          <span>🦊 Skittles</span>
+          <span>🧸 Teddy</span>
+          <span>🦒 Gigi</span>
+          <span>🐱 Whiskers</span>
+          <span>🐸 Pip</span>
+          <span>🦔 Quill</span>
+          <span>🐢 Shelly</span>
+          <span>🐰 Mochi</span>
+          <span>🐢 Shelly</span>
+          <span>🐱 Whiskers</span>
+          <span>🐸 Pip</span>
+          <span>🐙 Inky</span>
+          <span>🐼 Bambu</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section class="sloth-feature">
   <div class="inner">
@@ -308,6 +409,103 @@ const STORIES = [
   },
   {
     ep: "Adventure 6",
+    title: "Gigi the Giraffe Brings a Heart",
+    cover: "c1",
+    icon: "🦒💖",
+    text: [
+      "One quiet afternoon, Clara was painting at her little table when she heard a soft KNOCK KNOCK at the window. She looked up — and there was a tall, tall, TALL giraffe peeking right in!",
+      "\"Hi! I'm Gigi,\" said the giraffe, very politely. She had the longest eyelashes Clara had ever seen, and she was holding something very carefully in her mouth.",
+      "It was a heart. A big, sparkly pink heart, twice as big as Teddy. \"This is for you,\" Gigi said, leaning all the way down. \"Skittles the sloth made it, Periwinkle painted it, and Teddy added the sparkles. It's from EVERYONE in the magical world.\"",
+      "Clara hugged the heart so tight it made a little tinkle sound, like a bell. From that day on, Gigi visited every afternoon — sometimes with a heart, sometimes with a flower, but always with a giant giraffey smile."
+    ]
+  },
+  {
+    ep: "Adventure 7",
+    title: "Whiskers the Cat and the Sunbeam Surfboard",
+    cover: "c3",
+    icon: "🐱☀️",
+    text: [
+      "Whiskers was a calico cat who LOVED sunbeams. Not the regular kind — the fancy ones that shine through the window in the late afternoon.",
+      "One day she discovered something amazing: if you climbed on a sunbeam JUST right, you could ride it like a surfboard. \"Meow!\" said Whiskers, very impressed with herself.",
+      "She zoomed all the way to Clara's bedroom on a beam of golden light. Teddy was so surprised he fell off the bed (gently — Clara caught him).",
+      "Now every afternoon Whiskers surfs over for cuddles. Clara saves the warmest sunbeam just for her, and Whiskers purrs so loud it sounds like a tiny motorcycle. 🏍️"
+    ]
+  },
+  {
+    ep: "Adventure 8",
+    title: "Pip the Frog and the Puddle of Wishes",
+    cover: "c2",
+    icon: "🐸💧",
+    text: [
+      "It had rained all morning, and Pip the frog was the happiest he'd ever been. \"Puddles!\" he said. \"PUDDLES EVERYWHERE!\"",
+      "He hopped from puddle to puddle. SPLASH! SPLASH! SPLASH! Then he found one that was different — it shimmered like a rainbow.",
+      "\"This,\" said Pip, \"is a wishing puddle.\" He closed his big froggy eyes and wished. POOF! Clara appeared, holding Teddy, in her best polka-dot rain boots.",
+      "They jumped in puddles together until the sun came back out. Pip says wishing puddles are the best kind, but ANY puddle is good when you have a friend to splash with."
+    ]
+  },
+  {
+    ep: "Adventure 9",
+    title: "Quill the Porcupine's Softest Hug",
+    cover: "c4",
+    icon: "🦔🤗",
+    text: [
+      "Everyone thought Quill the porcupine was too pointy to hug. Even Quill thought so. He felt sad about it almost every day.",
+      "One night, Clara couldn't find Teddy. She was sniffly and worried. Quill tiptoed over and said, \"I'll help you look. But please don't try to hug me — I'm awfully prickly.\"",
+      "They found Teddy under a pile of pillows (silly Teddy). Clara was SO happy she forgot all about pointy spines and gave Quill the biggest hug she had.",
+      "And do you know what? Quill's spines went all soft and floofy when he was loved. \"Oh!\" said Quill, very surprised. \"That's the secret.\" Now he hugs everyone."
+    ]
+  },
+  {
+    ep: "Adventure 10",
+    title: "Inky the Octopus Has Eight High-Fives",
+    cover: "c2",
+    icon: "🐙🙌",
+    text: [
+      "Inky lived in a sparkly tide pool. He had a problem: he had EIGHT arms, and only two friends to high-five at a time.",
+      "\"I need more friends,\" he said. So he wrote eight invitations and sent them out in eight little bottles.",
+      "By Saturday, his tide pool was the busiest place on the beach. Teddy came. Clara came. Skittles came (slowly). Periwinkle, Whiskers, Pip, Quill, and Mochi all came too.",
+      "EIGHT friends! EIGHT high-fives at the SAME TIME! Inky was so happy he turned a different color for every arm — pink, purple, gold, green, blue, orange, silver, and rainbow."
+    ]
+  },
+  {
+    ep: "Adventure 11",
+    title: "Bambu the Panda's Bamboo Birthday",
+    cover: "c4",
+    icon: "🐼🎂",
+    text: [
+      "Bambu the panda was turning seven. To celebrate, he wanted bamboo cake. Bamboo balloons. Bamboo party hats. (Bambu REALLY likes bamboo.)",
+      "But when his friends arrived, Bambu got shy and hid behind the cake. Big parties made his tummy feel funny.",
+      "Clara held Teddy up next to Bambu and whispered, \"Teddy gets shy too. He says it's okay to take it slow.\" Bambu peeked out. Teddy waved his little paw.",
+      "Bambu took a deep panda breath and came out. The party was QUIET and COZY and exactly his speed. Best birthday ever, he decided. With seven candles and a LOT of bamboo."
+    ]
+  },
+  {
+    ep: "Adventure 12",
+    title: "Mochi the Bunny Hops to the Moon",
+    cover: "c1",
+    icon: "🐰🌙",
+    text: [
+      "Mochi the bunny had been practicing her hops. Little hops, big hops, sideways hops, twirly hops. \"I think I'm ready,\" she said. \"I'm going to hop to the moon.\"",
+      "Clara packed a tiny bunny-sized backpack: one carrot, one teddy bear (a pretend Teddy, for company), and a thermos of strawberry milk.",
+      "BOING! BOING! BOING! Mochi hopped higher than the trees. Higher than the clouds. Higher than the rainbow. ALL THE WAY TO THE MOON.",
+      "On the moon she found that moondust tastes a tiny bit like sugar. She brought a pocketful home for Clara. Now sometimes Clara's pancakes sparkle, and only Mochi knows why."
+    ]
+  },
+  {
+    ep: "Adventure 13",
+    title: "Shelly the Turtle Takes Her Time",
+    cover: "c2",
+    icon: "🐢🌷",
+    text: [
+      "Shelly the turtle was the slowest of all Clara's friends. Skittles the sloth was slow. Shelly was SLOWER. \"I like to notice things,\" Shelly said.",
+      "One morning, everyone was rushing to a picnic. Periwinkle galloped. Mochi hopped. Whiskers zoomed on a sunbeam. Shelly… ambled.",
+      "By the time she arrived, the picnic was almost done. But Shelly was carrying something none of the others had brought — a tiny pink flower she'd found on the way.",
+      "\"For you, Clara,\" said Shelly. \"It only blooms in the morning. You have to be slow enough to see it.\" Clara put the flower in her hair, and that day was the loveliest day of all.",
+      "Shelly's lesson: rushing gets you there. Going slowly shows you the world."
+    ]
+  },
+  {
+    ep: "Adventure 14",
     title: "A Letter From Uncle Madeleine",
     cover: "c2",
     icon: "💌🦄",

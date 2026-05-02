@@ -487,6 +487,213 @@ a { color: var(--cotton-ink); text-decoration: none; }
 .unicorn-leg.l3 { right: 30px; }
 .unicorn-leg.l4 { right: 52px; }
 
+/* ---------- Giraffe (CSS) ---------- */
+.giraffe {
+  position: relative;
+  width: 110px;
+  height: 180px;
+  display: inline-block;
+}
+.giraffe-body {
+  position: absolute;
+  bottom: 30px; left: 18px;
+  width: 70px; height: 70px;
+  background: linear-gradient(135deg, #f5c044, #d99820);
+  border-radius: 40% 40% 30% 30% / 50% 50% 30% 30%;
+}
+.giraffe-spot {
+  position: absolute;
+  background: #8a5a18;
+  border-radius: 50%;
+  opacity: 0.75;
+}
+.giraffe-spot.s1 { width: 12px; height: 10px; top: 80px; left: 28px; }
+.giraffe-spot.s2 { width: 9px; height: 12px; top: 92px; left: 50px; }
+.giraffe-spot.s3 { width: 10px; height: 9px; top: 70px; left: 62px; }
+.giraffe-spot.s4 { width: 11px; height: 10px; top: 105px; left: 38px; }
+.giraffe-spot.s5 { width: 7px; height: 8px; top: 30px; left: 64px; }
+.giraffe-spot.s6 { width: 8px; height: 9px; top: 50px; left: 70px; }
+.giraffe-neck {
+  position: absolute;
+  top: 14px; left: 50px;
+  width: 22px; height: 70px;
+  background: linear-gradient(135deg, #f5c044, #d99820);
+  border-radius: 30% 50% 10% 10% / 30% 50% 10% 10%;
+  transform: rotate(8deg);
+  transform-origin: bottom center;
+  animation: giraffe-nod 5s ease-in-out infinite;
+}
+@keyframes giraffe-nod {
+  0%, 100% { transform: rotate(8deg); }
+  50%      { transform: rotate(-2deg); }
+}
+.giraffe-head {
+  position: absolute;
+  top: 0; left: 56px;
+  width: 38px; height: 32px;
+  background: linear-gradient(135deg, #f5c044, #d99820);
+  border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
+}
+.giraffe-ear {
+  position: absolute;
+  top: -2px;
+  width: 12px; height: 16px;
+  background: #d99820;
+  border-radius: 50%;
+}
+.giraffe-ear.left { left: 50px; transform: rotate(-30deg); }
+.giraffe-ear.right { left: 88px; transform: rotate(30deg); }
+.giraffe-horn {
+  position: absolute;
+  top: -12px;
+  width: 5px; height: 14px;
+  background: #8a5a18;
+  border-radius: 50%;
+}
+.giraffe-horn::after {
+  content: '';
+  position: absolute;
+  top: -4px; left: -2px;
+  width: 9px; height: 8px;
+  background: #6b4fa3;
+  border-radius: 50%;
+  opacity: 0.7;
+}
+.giraffe-horn.left { left: 60px; }
+.giraffe-horn.right { left: 86px; }
+.giraffe-eye {
+  position: absolute;
+  top: 12px; left: 80px;
+  width: 6px; height: 8px;
+  background: #2a1f3d;
+  border-radius: 50%;
+}
+.giraffe-cheek {
+  position: absolute;
+  top: 20px; left: 86px;
+  width: 7px; height: 5px;
+  background: var(--cotton-deep);
+  border-radius: 50%;
+  opacity: 0.7;
+}
+.giraffe-leg {
+  position: absolute;
+  bottom: 0;
+  width: 12px; height: 36px;
+  background: linear-gradient(135deg, #f5c044, #d99820);
+  border-radius: 4px 4px 2px 2px;
+}
+.giraffe-leg.l1 { left: 22px; }
+.giraffe-leg.l2 { left: 38px; }
+.giraffe-leg.l3 { right: 28px; }
+.giraffe-leg.l4 { right: 12px; }
+/* The two front legs lift slightly to hold the heart */
+.giraffe-leg.l3, .giraffe-leg.l4 {
+  transform-origin: top center;
+  animation: giraffe-leg-lift 3s ease-in-out infinite;
+}
+@keyframes giraffe-leg-lift {
+  0%, 100% { transform: rotate(0deg); }
+  50%      { transform: rotate(-8deg); }
+}
+.giraffe-tail {
+  position: absolute;
+  top: 38px; left: 4px;
+  width: 16px; height: 5px;
+  background: #d99820;
+  border-radius: 50%;
+  transform: rotate(-15deg);
+}
+.giraffe-tail::after {
+  content: '';
+  position: absolute;
+  left: -3px; top: -2px;
+  width: 8px; height: 8px;
+  background: #8a5a18;
+  border-radius: 50%;
+}
+
+/* ---------- Giraffe-held heart (between the front legs) ---------- */
+/* Positioned relative to .giraffe (110x180). Front legs are right-side
+   (l3 at right:28, l4 at right:12, both 12x36 starting from bottom).
+   The heart sits in front of the body, between/in front of the front legs,
+   like the giraffe is hugging it close. */
+.giraffe-heart {
+  position: absolute;
+  bottom: 8px;
+  right: 0px;
+  width: 44px;
+  height: 40px;
+  z-index: 4; /* above body, below front-leg overlay if needed */
+  transform-origin: 50% 100%;
+  animation: giraffe-heart-bob 2.6s ease-in-out infinite;
+  filter: drop-shadow(0 4px 6px rgba(255, 100, 160, 0.4));
+  pointer-events: none;
+}
+@keyframes giraffe-heart-bob {
+  0%, 100% { transform: rotate(-4deg) scale(1); }
+  50%      { transform: rotate(4deg) scale(1.06); }
+}
+.giraffe-heart svg { width: 100%; height: 100%; display: block; }
+/* Small overlay strap so the legs visually "clasp" the heart */
+.giraffe-leg.l3 { z-index: 5; }
+.giraffe-leg.l4 { z-index: 5; }
+
+/* ---------- Big sparkle heart ---------- */
+.big-heart {
+  position: relative;
+  width: 220px;
+  height: 200px;
+  display: inline-block;
+  filter: drop-shadow(0 12px 24px rgba(255, 100, 160, 0.35));
+  animation: heart-beat 1.6s ease-in-out infinite;
+  cursor: pointer;
+}
+@keyframes heart-beat {
+  0%, 100% { transform: scale(1); }
+  15%      { transform: scale(1.12); }
+  30%      { transform: scale(1); }
+  45%      { transform: scale(1.08); }
+  60%      { transform: scale(1); }
+}
+.big-heart svg { width: 100%; height: 100%; display: block; }
+.big-heart::before, .big-heart::after {
+  content: '✨';
+  position: absolute;
+  font-size: 28px;
+  animation: heart-twinkle 2s ease-in-out infinite;
+  pointer-events: none;
+}
+.big-heart::before { top: 8%; left: -8%; }
+.big-heart::after { bottom: 18%; right: -6%; animation-delay: -1s; }
+@keyframes heart-twinkle {
+  0%, 100% { opacity: 0; transform: scale(0.6) rotate(0deg); }
+  50%      { opacity: 1; transform: scale(1.2) rotate(20deg); }
+}
+
+.heart-section {
+  position: relative;
+  text-align: center;
+  padding: 60px 24px 80px;
+  z-index: 1;
+}
+.heart-section .heart-msg {
+  font-family: 'Fredoka', sans-serif;
+  font-size: clamp(24px, 4vw, 40px);
+  font-weight: 600;
+  background: linear-gradient(135deg, #ff7eb5, #c8a0ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-top: 18px;
+  letter-spacing: -0.01em;
+}
+.heart-section .heart-sub {
+  margin-top: 10px;
+  color: var(--ink-soft);
+  font-size: 16px;
+}
+
 /* gentle bounce */
 .bounce { animation: bounce 3s ease-in-out infinite; }
 @keyframes bounce {
@@ -570,3 +777,129 @@ a { color: var(--cotton-ink); text-decoration: none; }
   z-index: 1;
 }
 .footer-heart { color: var(--cotton-deep); }
+
+/* ============================================================
+   NEW ANIMAL FRIENDS — Cat, Frog, Porcupine, Octopus, Panda, Bunny
+   Each is sized ~110×120px to match the existing crew.
+   ============================================================ */
+
+/* shared sizing helper */
+.critter {
+  position: relative;
+  display: inline-block;
+  width: 110px;
+  height: 120px;
+}
+.critter svg { width: 100%; height: 100%; display: block; overflow: visible; }
+
+/* idle bobs — slight variation per critter so they don't sync */
+.critter.cat       { animation: bob-y 3.6s ease-in-out infinite; }
+.critter.frog      { animation: hop-y 1.6s ease-in-out infinite; }
+.critter.porcupine { animation: bob-y 4.2s ease-in-out infinite 0.4s; }
+.critter.octopus   { animation: float-y 4.8s ease-in-out infinite; }
+.critter.panda     { animation: bob-y 3.2s ease-in-out infinite 0.8s; }
+.critter.bunny     { animation: hop-y 1.9s ease-in-out infinite 0.3s; }
+.critter.turtle    { animation: bob-y 4s   ease-in-out infinite 0.6s; }
+
+@keyframes bob-y {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(-8px); }
+}
+@keyframes hop-y {
+  0%, 60%, 100% { transform: translateY(0)       scaleY(1); }
+  20%           { transform: translateY(-14px)   scaleY(1.08); }
+  40%           { transform: translateY(-2px)    scaleY(0.94); }
+}
+@keyframes float-y {
+  0%,100% { transform: translateY(0)   rotate(-2deg); }
+  50%     { transform: translateY(-10px) rotate(2deg); }
+}
+
+/* tiny tail/ear/tentacle wiggles via inline animation classes */
+.wig-slow { animation: wig-slow 2.4s ease-in-out infinite; transform-origin: center bottom; }
+.wig-fast { animation: wig-fast 1.4s ease-in-out infinite; transform-origin: center bottom; }
+@keyframes wig-slow { 0%,100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+@keyframes wig-fast { 0%,100% { transform: rotate(-10deg); } 50% { transform: rotate(10deg); } }
+
+/* ============================================================
+   Crew cards row — character cards (separate from feature cards)
+   ============================================================ */
+.crew-section {
+  position: relative;
+  padding: 80px 24px 40px;
+  text-align: center;
+  z-index: 2;
+}
+.crew-section h2 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: clamp(36px, 5vw, 56px);
+  color: var(--lavender-ink);
+  margin: 0 0 8px;
+}
+.crew-section .crew-sub {
+  color: var(--ink-soft);
+  font-size: 18px;
+  margin: 0 auto 40px;
+  max-width: 540px;
+}
+.crew-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 18px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 12px;
+}
+
+.crew-card {
+  background: white;
+  border-radius: 28px;
+  padding: 18px 14px 20px;
+  box-shadow: var(--shadow-soft);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.crew-card:hover {
+  transform: translateY(-8px) rotate(-1deg);
+  box-shadow: 0 18px 40px -12px rgba(155, 110, 200, 0.28);
+}
+.crew-card .stage {
+  width: 110px;
+  height: 120px;
+  display: grid;
+  place-items: end center;
+  margin-bottom: 10px;
+}
+.crew-card .name {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 20px;
+  color: var(--lavender-ink);
+  margin: 4px 0 2px;
+  font-weight: 600;
+}
+.crew-card .blurb {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin: 0;
+  line-height: 1.35;
+  text-align: center;
+}
+
+/* hover sparkle dust ring around the card */
+.crew-card::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 30px;
+  background: radial-gradient(circle at 20% 0%, rgba(255, 200, 230, 0.4), transparent 50%),
+              radial-gradient(circle at 80% 100%, rgba(200, 200, 255, 0.4), transparent 50%);
+  opacity: 0;
+  transition: opacity 220ms;
+  pointer-events: none;
+  z-index: -1;
+}
+.crew-card { position: relative; }
+.crew-card:hover::before { opacity: 1; }

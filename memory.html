@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Matching Game · Clara's Magical World</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+.mg-header { text-align: center; padding: 30px 24px 20px; position: relative; }
+.mg-header .blob1 { width: 380px; height: 380px; background: var(--cotton); top: -100px; left: -50px; }
+.mg-header .blob2 { width: 320px; height: 320px; background: var(--lavender); top: 0; right: -50px; }
+
+.mg-stage {
+  max-width: 1000px;
+  margin: 0 auto 60px;
+  padding: 0 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.mg-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  background: white;
+  border-radius: var(--r-pill);
+  padding: 12px 22px;
+  box-shadow: var(--shadow-soft);
+  margin-bottom: 22px;
+}
+.mg-stat {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  color: var(--lavender-ink);
+  font-size: 16px;
+}
+.mg-stat .num {
+  background: linear-gradient(135deg, var(--cotton), var(--lavender));
+  color: var(--cotton-ink);
+  padding: 4px 14px;
+  border-radius: var(--r-pill);
+  min-width: 36px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.mg-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  perspective: 1200px;
+}
+@media (max-width: 640px) {
+  .mg-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+}
+
+.mg-card {
+  aspect-ratio: 1;
+  position: relative;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 500ms cubic-bezier(.34,1.56,.64,1);
+  border-radius: var(--r-md);
+}
+.mg-card.flipped, .mg-card.matched { transform: rotateY(180deg); }
+.mg-card.matched { cursor: default; }
+.mg-card.shake { animation: card-shake 400ms ease-in-out; }
+@keyframes card-shake {
+  0%, 100% { transform: rotateY(180deg) translateX(0); }
+  25% { transform: rotateY(180deg) translateX(-6px); }
+  75% { transform: rotateY(180deg) translateX(6px); }
+}
+
+.mg-face {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-md);
+  display: grid; place-items: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow: var(--shadow-soft);
+  user-select: none;
+}
+.mg-back {
+  background: linear-gradient(135deg, var(--lavender-deep), var(--cotton-deep));
+  color: white;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 38px;
+  position: relative;
+  overflow: hidden;
+}
+.mg-back::before {
+  content: '✨';
+  position: absolute;
+  font-size: 18px;
+  top: 10%; left: 14%;
+  opacity: 0.7;
+  animation: twinkle 2.4s ease-in-out infinite;
+}
+.mg-back::after {
+  content: '✨';
+  position: absolute;
+  font-size: 14px;
+  bottom: 18%; right: 16%;
+  opacity: 0.7;
+  animation: twinkle 2.4s ease-in-out infinite 0.8s;
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.4; transform: scale(0.8); }
+  50%      { opacity: 1; transform: scale(1.2); }
+}
+.mg-back .crown { font-size: 90px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.15)); }
+
+.mg-front {
+  background: white;
+  transform: rotateY(180deg);
+  font-size: 90px;
+  border: 3px solid var(--cream);
+}
+@media (max-width: 540px) {
+  .mg-back .crown, .mg-front { font-size: 64px; }
+}
+
+.mg-card.matched .mg-front {
+  border-color: var(--cotton-deep);
+  background: linear-gradient(135deg, #fff, var(--cotton));
+  animation: matched-pop 600ms cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes matched-pop {
+  0%   { transform: rotateY(180deg) scale(1); }
+  40%  { transform: rotateY(180deg) scale(1.12); }
+  100% { transform: rotateY(180deg) scale(1); }
+}
+
+.mg-card:not(.flipped):not(.matched):hover {
+  transform: scale(1.04);
+  transition: transform 200ms;
+}
+
+/* Win overlay */
+.mg-win {
+  position: fixed;
+  inset: 0;
+  background: rgba(75, 50, 110, 0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+  backdrop-filter: blur(6px);
+}
+.mg-win.show { display: flex; animation: fade-in 300ms ease-out; }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+.mg-win-card {
+  background: white;
+  border-radius: var(--r-lg);
+  padding: 40px 36px;
+  max-width: 440px;
+  text-align: center;
+  box-shadow: var(--shadow-pop);
+  animation: win-pop 600ms cubic-bezier(.34,1.56,.64,1);
+  position: relative;
+}
+@keyframes win-pop {
+  from { opacity: 0; transform: scale(0.7) translateY(20px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.mg-win-card h2 {
+  font-size: 36px;
+  color: var(--lavender-ink);
+  margin-bottom: 8px;
+}
+.mg-win-card .crown {
+  font-size: 80px;
+  display: block;
+  margin-bottom: 4px;
+  animation: crown-spin 2s ease-in-out infinite;
+}
+@keyframes crown-spin {
+  0%, 100% { transform: rotate(-8deg); }
+  50%      { transform: rotate(8deg); }
+}
+.mg-win-card p { color: var(--ink-soft); font-size: 17px; margin: 8px 0 24px; }
+.mg-win-card .stats {
+  display: flex; justify-content: center; gap: 24px;
+  margin: 18px 0 24px;
+  font-family: 'Fredoka', sans-serif;
+}
+.mg-win-card .stat .label { display: block; font-size: 12px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.05em; }
+.mg-win-card .stat .val { font-size: 28px; color: var(--cotton-ink); font-weight: 600; }
+
+/* Unicorn parade across the screen */
+.mg-parade {
+  position: fixed;
+  pointer-events: none;
+  z-index: 999;
+  font-size: 60px;
+  animation: parade 4s linear forwards;
+  bottom: 100px;
+}
+@keyframes parade {
+  from { transform: translateX(-100px); }
+  to   { transform: translateX(calc(100vw + 100px)); }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-brand">
+    <span class="nav-brand-icon">🦄</span>
+    <span>Clara's Magical World</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="adventures.html" class="nav-link">Teddy's Adventures</a>
+    <a href="memory.html" class="nav-link active">Matching Game</a>
+    <a href="guestbook.html" class="nav-link">Guestbook</a>
+  </div>
+</nav>
+
+<header class="mg-header">
+  <div class="cloud-blob blob1"></div>
+  <div class="cloud-blob blob2"></div>
+  <div class="container">
+    <span class="eyebrow">🎴 Memory Match</span>
+    <h1 class="h-display" style="margin-top: 16px;">Find the matching pairs ✨</h1>
+    <p style="font-size: 18px; color: var(--ink-soft); margin-top: 14px; max-width: 520px; margin-left: auto; margin-right: auto;">
+      Click two cards to flip them. Find all the matches to win a unicorn parade!
+    </p>
+  </div>
+</header>
+
+<section class="mg-stage">
+  <div class="mg-toolbar">
+    <div class="mg-stat">Matches <span class="num" id="matchesNum">0 / 6</span></div>
+    <div class="mg-stat">Tries <span class="num" id="triesNum">0</span></div>
+    <button class="btn btn-primary" id="newGameBtn">🎲 New game</button>
+  </div>
+
+  <div class="mg-grid" id="grid"></div>
+</section>
+
+<div class="mg-win" id="winOverlay">
+  <div class="mg-win-card">
+    <span class="crown">👑</span>
+    <h2>You did it, Clara!</h2>
+    <p id="winMsg">All the friends are matched up! ✨</p>
+    <div class="stats">
+      <div class="stat"><span class="label">Tries</span><span class="val" id="winTries">0</span></div>
+      <div class="stat"><span class="label">Time</span><span class="val" id="winTime">0s</span></div>
+    </div>
+    <button class="btn btn-primary" id="winNewBtn">🎲 Play again</button>
+  </div>
+</div>
+
+<footer class="footer">
+  <p>Made with <span class="footer-heart">💖</span> for Clara, by Uncle Madeleine</p>
+</footer>
+
+<script src="magic.js"></script>
+<script>
+const CHARACTERS = [
+  { emoji: '🦄', name: 'Unicorn' },
+  { emoji: '🧸', name: 'Teddy' },
+  { emoji: '🦥', name: 'Rainbow Sloth' },
+  { emoji: '🦒', name: 'Giraffe' },
+  { emoji: '⭐', name: 'Star' },
+  { emoji: '🌈', name: 'Rainbow' },
+];
+
+const grid = document.getElementById('grid');
+const matchesNum = document.getElementById('matchesNum');
+const triesNum = document.getElementById('triesNum');
+const winOverlay = document.getElementById('winOverlay');
+const winTries = document.getElementById('winTries');
+const winTime = document.getElementById('winTime');
+const winMsg = document.getElementById('winMsg');
+
+let firstPick = null;
+let lock = false;
+let matches = 0;
+let tries = 0;
+let startTime = 0;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function newGame() {
+  firstPick = null;
+  lock = false;
+  matches = 0;
+  tries = 0;
+  startTime = Date.now();
+  matchesNum.textContent = `0 / ${CHARACTERS.length}`;
+  triesNum.textContent = '0';
+  winOverlay.classList.remove('show');
+
+  const deck = shuffle([...CHARACTERS, ...CHARACTERS]);
+  grid.innerHTML = '';
+  deck.forEach((c, i) => {
+    const card = document.createElement('div');
+    card.className = 'mg-card';
+    card.dataset.emoji = c.emoji;
+    card.dataset.idx = i;
+    card.innerHTML = `
+      <div class="mg-face mg-back"><span class="crown">👑</span></div>
+      <div class="mg-face mg-front">${c.emoji}</div>
+    `;
+    card.addEventListener('click', () => onPick(card));
+    grid.appendChild(card);
+  });
+}
+
+function onPick(card) {
+  if (lock) return;
+  if (card.classList.contains('flipped') || card.classList.contains('matched')) return;
+
+  card.classList.add('flipped');
+
+  // Tiny sparkle on flip
+  const r = card.getBoundingClientRect();
+  if (window.MagicSparkle) MagicSparkle.spawnSparkle(r.left + r.width/2, r.top + r.height*0.3);
+
+  if (!firstPick) {
+    firstPick = card;
+    return;
+  }
+
+  // Second pick
+  tries++;
+  triesNum.textContent = String(tries);
+
+  if (firstPick.dataset.emoji === card.dataset.emoji) {
+    // Match!
+    const a = firstPick, b = card;
+    firstPick = null;
+    setTimeout(() => {
+      a.classList.add('matched');
+      b.classList.add('matched');
+      const ra = a.getBoundingClientRect();
+      const rb = b.getBoundingClientRect();
+      if (window.MagicSparkle) {
+        MagicSparkle.burstAt(ra.left + ra.width/2, ra.top + ra.height/2, 8);
+        MagicSparkle.burstAt(rb.left + rb.width/2, rb.top + rb.height/2, 8);
+      }
+      matches++;
+      matchesNum.textContent = `${matches} / ${CHARACTERS.length}`;
+      if (matches === CHARACTERS.length) {
+        setTimeout(showWin, 700);
+      }
+    }, 350);
+  } else {
+    // No match — shake then flip back
+    lock = true;
+    const a = firstPick, b = card;
+    firstPick = null;
+    setTimeout(() => {
+      a.classList.add('shake');
+      b.classList.add('shake');
+    }, 350);
+    setTimeout(() => {
+      a.classList.remove('flipped', 'shake');
+      b.classList.remove('flipped', 'shake');
+      lock = false;
+    }, 1000);
+  }
+}
+
+function showWin() {
+  const elapsed = Math.round((Date.now() - startTime) / 1000);
+  winTries.textContent = String(tries);
+  winTime.textContent = elapsed + 's';
+
+  // Pick a fun message based on tries
+  if (tries <= 8) winMsg.textContent = "WOW! Sparkle genius! ✨🦄";
+  else if (tries <= 12) winMsg.textContent = "Amazing memory, Clara! 🌈";
+  else winMsg.textContent = "All matched up! Great job! 💖";
+
+  winOverlay.classList.add('show');
+
+  // Unicorn parade!
+  const parade = ['🦄', '🌈', '🦄', '⭐', '🦥', '🧸', '🦒', '🦄', '✨', '🌈'];
+  parade.forEach((emoji, i) => {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'mg-parade';
+      el.textContent = emoji;
+      el.style.bottom = (60 + Math.random() * 200) + 'px';
+      el.style.animationDuration = (3 + Math.random() * 2) + 's';
+      el.style.fontSize = (40 + Math.random() * 40) + 'px';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 6000);
+    }, i * 250);
+  });
+
+  // Big sparkle burst
+  if (window.MagicSparkle) {
+    for (let i = 0; i < 60; i++) {
+      setTimeout(() => MagicSparkle.spawnSparkle(
+        Math.random() * window.innerWidth,
+        Math.random() * window.innerHeight * 0.7
+      ), i * 40);
+    }
+  }
+}
+
+document.getElementById('newGameBtn').addEventListener('click', newGame);
+document.getElementById('winNewBtn').addEventListener('click', newGame);
+
+newGame();
+</script>
+</body>
+</html>

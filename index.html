@@ -18,13 +18,14 @@
 .heroA .stage {
   position: relative;
   margin: 30px auto 0;
-  max-width: 900px;
-  height: 280px;
+  max-width: 980px;
+  height: 320px;
 }
 .heroA .stage > * { position: absolute; }
-.heroA .stage .teddy { left: 50%; transform: translateX(-50%); top: 30px; }
-.heroA .stage .unicorn { left: 8%; top: 80px; }
-.heroA .stage .sloth { right: 8%; top: 100px; }
+.heroA .stage .teddy { left: 50%; transform: translateX(-50%); top: 60px; }
+.heroA .stage .unicorn { left: 6%; top: 110px; }
+.heroA .stage .sloth { right: 6%; top: 130px; }
+.heroA .stage .giraffe { left: 26%; top: 70px; }
 .heroA .cta-row {
   display: flex; gap: 14px; justify-content: center; margin-top: 36px;
   flex-wrap: wrap;
@@ -59,31 +60,6 @@
   border-radius: 40px;
   opacity: 0.4;
 }
-.heroB .vs-rainbow {
-  position: absolute;
-  top: 30px; left: 50%; transform: translateX(-50%);
-  width: 300px; height: 150px;
-  border-radius: 300px 300px 0 0;
-  background: conic-gradient(from 270deg at 50% 100%,
-    transparent 0deg 90deg,
-    var(--rainbow-1) 90deg 105deg,
-    var(--rainbow-2) 105deg 120deg,
-    var(--rainbow-3) 120deg 135deg,
-    var(--rainbow-4) 135deg 150deg,
-    var(--rainbow-5) 150deg 165deg,
-    var(--rainbow-6) 165deg 180deg,
-    transparent 180deg);
-  opacity: 0.7;
-}
-.heroB .vs-teddy { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); }
-.heroB .vs-cloud {
-  position: absolute;
-  background: white;
-  border-radius: 50%;
-  box-shadow: 30px 0 0 -8px white, -30px 0 0 -8px white, 0 -16px 0 -10px white;
-}
-.heroB .vs-cloud.c1 { width: 70px; height: 40px; top: 40px; left: 30px; }
-.heroB .vs-cloud.c2 { width: 60px; height: 35px; top: 70px; right: 40px; }
 @media (max-width: 800px) {
   .heroB { grid-template-columns: 1fr; }
   .heroB .visual-side { height: 360px; }
@@ -128,9 +104,10 @@
   height: 200px;
 }
 .heroC .floating-friends > * { position: absolute; bottom: 0; }
-.heroC .floating-friends .unicorn { left: 18%; }
-.heroC .floating-friends .sloth { right: 18%; }
+.heroC .floating-friends .unicorn { left: 14%; }
+.heroC .floating-friends .sloth { right: 14%; }
 .heroC .floating-friends .teddy { left: 50%; transform: translateX(-50%); }
+.heroC .floating-friends .giraffe { right: 32%; bottom: 0; }
 
 .subhead {
   font-size: clamp(16px, 2vw, 20px);
@@ -158,7 +135,7 @@
 <body>
 
 <div class="note-banner">
-  A magical website made with love for Clara — by Uncle Madeleine
+  A magical website made with love for Clara &mdash; by Uncle Madeleine
 </div>
 
 <nav class="nav">
@@ -169,6 +146,7 @@
   <div class="nav-links">
     <a href="index.html" class="nav-link active">Home</a>
     <a href="adventures.html" class="nav-link">Teddy's Adventures</a>
+    <a href="memory.html" class="nav-link">Matching Game</a>
     <a href="guestbook.html" class="nav-link">Guestbook</a>
   </div>
 </nav>
@@ -226,6 +204,41 @@
           <div class="sloth-smile"></div>
         </div>
       </div>
+      <div class="giraffe bounce-slow">
+        <div class="giraffe-tail"></div>
+        <div class="giraffe-body"></div>
+        <div class="giraffe-spot s1"></div>
+        <div class="giraffe-spot s2"></div>
+        <div class="giraffe-spot s3"></div>
+        <div class="giraffe-spot s4"></div>
+        <div class="giraffe-heart">
+          <svg viewBox="0 0 44 40" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="gh-grad-A" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ff7eb5" />
+                <stop offset="100%" stop-color="#c8a0ff" />
+              </linearGradient>
+            </defs>
+            <path d="M22 36 C 6 25, 2 15, 2 10 C 2 4, 7 1, 12 1 C 16 1, 20 4, 22 8 C 24 4, 28 1, 32 1 C 37 1, 42 4, 42 10 C 42 15, 38 25, 22 36 Z" fill="url(#gh-grad-A)" stroke="white" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="giraffe-leg l1"></div>
+        <div class="giraffe-leg l2"></div>
+        <div class="giraffe-leg l3"></div>
+        <div class="giraffe-leg l4"></div>
+        <div class="giraffe-neck">
+          <div class="giraffe-spot s5" style="top:20px;left:6px;"></div>
+          <div class="giraffe-spot s6" style="top:42px;left:10px;"></div>
+        </div>
+        <div class="giraffe-ear left"></div>
+        <div class="giraffe-ear right"></div>
+        <div class="giraffe-horn left"></div>
+        <div class="giraffe-horn right"></div>
+        <div class="giraffe-head">
+          <div class="giraffe-eye" style="top:12px;left:24px;"></div>
+          <div class="giraffe-cheek" style="top:20px;left:30px;"></div>
+        </div>
+      </div>
     </div>
     <div class="cta-row">
       <a href="adventures.html" class="btn btn-primary">Read Teddy's Adventures &rarr;</a>
@@ -234,7 +247,7 @@
   </div>
 </section>
 
-<!-- Variation B: Storybook spread with real hero image -->
+<!-- Variation B: Storybook spread with hero image -->
 <section class="heroB" data-variant="B" id="heroB" style="display:none;">
   <div class="cloud-blob blob1"></div>
   <div class="text-side">
@@ -247,7 +260,7 @@
     </div>
   </div>
   <div class="visual-side" style="padding: 0; overflow: hidden;">
-    <img src="images/clara-giraffe.png" alt="Giraffe holding a sign that says For you, Clara!" style="width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 50px;" />
+    <img src="images/gigi-giraffe.png" alt="A golden giraffe at sunset holding a heart" style="width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 50px;" />
   </div>
 </section>
 
@@ -303,12 +316,90 @@
           <div class="sloth-smile"></div>
         </div>
       </div>
+      <div class="giraffe bounce-slow">
+        <div class="giraffe-tail"></div>
+        <div class="giraffe-body"></div>
+        <div class="giraffe-spot s1"></div>
+        <div class="giraffe-spot s2"></div>
+        <div class="giraffe-spot s3"></div>
+        <div class="giraffe-spot s4"></div>
+        <div class="giraffe-heart">
+          <svg viewBox="0 0 44 40" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="gh-grad-C" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ff7eb5" />
+                <stop offset="100%" stop-color="#c8a0ff" />
+              </linearGradient>
+            </defs>
+            <path d="M22 36 C 6 25, 2 15, 2 10 C 2 4, 7 1, 12 1 C 16 1, 20 4, 22 8 C 24 4, 28 1, 32 1 C 37 1, 42 4, 42 10 C 42 15, 38 25, 22 36 Z" fill="url(#gh-grad-C)" stroke="white" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="giraffe-leg l1"></div>
+        <div class="giraffe-leg l2"></div>
+        <div class="giraffe-leg l3"></div>
+        <div class="giraffe-leg l4"></div>
+        <div class="giraffe-neck">
+          <div class="giraffe-spot s5" style="top:20px;left:6px;"></div>
+          <div class="giraffe-spot s6" style="top:42px;left:10px;"></div>
+        </div>
+        <div class="giraffe-ear left"></div>
+        <div class="giraffe-ear right"></div>
+        <div class="giraffe-horn left"></div>
+        <div class="giraffe-horn right"></div>
+        <div class="giraffe-head">
+          <div class="giraffe-eye" style="top:12px;left:24px;"></div>
+          <div class="giraffe-cheek" style="top:20px;left:30px;"></div>
+        </div>
+      </div>
     </div>
     <div style="display:flex; gap: 14px; justify-content: center; margin-top: 36px; flex-wrap: wrap;">
       <a href="adventures.html" class="btn btn-primary">Adventures &rarr;</a>
       <a href="guestbook.html" class="btn btn-ghost">Guestbook</a>
     </div>
   </div>
+</section>
+
+<!-- Clara's Crew — character cards -->
+<section class="crew-section" id="crewSection">
+  <span class="eyebrow">The whole crew</span>
+  <h2 style="margin-top: 14px;">Clara's Crew</h2>
+  <p class="crew-sub">Every friend Clara has made on her magical adventures.</p>
+  <div class="crew-grid">
+    <div class="crew-card"><div class="stage"><div class="critter cat"><svg viewBox="0 0 110 120"><g class="wig-slow" style="transform-origin: 22px 90px;"><path d="M 22 92 Q 6 80 8 60 Q 9 48 18 50" fill="none" stroke="#f4b886" stroke-width="9" stroke-linecap="round"/></g><ellipse cx="58" cy="92" rx="36" ry="22" fill="#f4b886"/><ellipse cx="58" cy="98" rx="22" ry="12" fill="#fff5e6"/><circle cx="58" cy="58" r="28" fill="#f4b886"/><path d="M 38 42 L 34 22 L 50 36 Z" fill="#f4b886"/><path d="M 78 42 L 82 22 L 66 36 Z" fill="#f4b886"/><path d="M 40 38 L 38 28 L 47 35 Z" fill="#ff9bbe"/><path d="M 76 38 L 78 28 L 69 35 Z" fill="#ff9bbe"/><ellipse cx="48" cy="58" rx="3" ry="4" fill="#2b1d3a"/><ellipse cx="68" cy="58" rx="3" ry="4" fill="#2b1d3a"/><circle cx="49" cy="56" r="1" fill="white"/><circle cx="69" cy="56" r="1" fill="white"/><path d="M 56 66 L 60 66 L 58 69 Z" fill="#ff9bbe"/><path d="M 58 69 Q 56 73 53 71 M 58 69 Q 60 73 63 71" stroke="#2b1d3a" stroke-width="1.4" fill="none" stroke-linecap="round"/><line x1="40" y1="68" x2="28" y2="66" stroke="#2b1d3a" stroke-width="1"/><line x1="40" y1="71" x2="28" y2="72" stroke="#2b1d3a" stroke-width="1"/><line x1="76" y1="68" x2="88" y2="66" stroke="#2b1d3a" stroke-width="1"/><line x1="76" y1="71" x2="88" y2="72" stroke="#2b1d3a" stroke-width="1"/><ellipse cx="44" cy="108" rx="7" ry="4" fill="#fff5e6"/><ellipse cx="72" cy="108" rx="7" ry="4" fill="#fff5e6"/></svg></div></div><p class="name">Whiskers &#x1F431;</p><p class="blurb">Naps in sunbeams. Purrs you to sleep.</p></div>
+    <div class="crew-card"><div class="stage"><div class="critter frog"><svg viewBox="0 0 110 120"><ellipse cx="22" cy="98" rx="12" ry="6" fill="#5fb87a"/><ellipse cx="88" cy="98" rx="12" ry="6" fill="#5fb87a"/><ellipse cx="55" cy="78" rx="32" ry="26" fill="#7fcf90"/><ellipse cx="55" cy="84" rx="20" ry="14" fill="#e8f9d8"/><circle cx="38" cy="44" r="13" fill="#7fcf90"/><circle cx="72" cy="44" r="13" fill="#7fcf90"/><circle cx="38" cy="44" r="9" fill="white"/><circle cx="72" cy="44" r="9" fill="white"/><circle cx="40" cy="46" r="5" fill="#2b1d3a"/><circle cx="74" cy="46" r="5" fill="#2b1d3a"/><circle cx="42" cy="44" r="1.5" fill="white"/><circle cx="76" cy="44" r="1.5" fill="white"/><path d="M 38 84 Q 55 96 72 84" stroke="#2b1d3a" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="32" cy="80" r="3" fill="#ff9bbe" opacity="0.6"/><circle cx="78" cy="80" r="3" fill="#ff9bbe" opacity="0.6"/></svg></div></div><p class="name">Pip &#x1F438;</p><p class="blurb">Loves rainy puddles and lily pad parties.</p></div>
+    <div class="crew-card"><div class="stage"><div class="critter porcupine"><svg viewBox="0 0 110 120"><g fill="#7a5a3a"><polygon points="22,80 18,52 30,72"/><polygon points="32,68 28,40 40,62"/><polygon points="44,62 42,32 54,58"/><polygon points="58,60 60,30 68,58"/><polygon points="70,62 76,38 78,62"/><polygon points="82,68 90,46 88,72"/></g><g fill="#a07248"><polygon points="26,76 24,56 32,72"/><polygon points="38,66 38,44 46,62"/><polygon points="52,62 54,36 60,58"/><polygon points="64,60 70,40 72,60"/><polygon points="76,66 82,48 84,68"/></g><ellipse cx="55" cy="86" rx="42" ry="26" fill="#e0c8a8"/><ellipse cx="30" cy="84" rx="20" ry="18" fill="#f4dec0"/><ellipse cx="14" cy="86" rx="6" ry="5" fill="#3a2a1a"/><circle cx="13" cy="84" r="1.5" fill="white" opacity="0.7"/><circle cx="28" cy="76" r="3.5" fill="#2b1d3a"/><circle cx="29" cy="75" r="1" fill="white"/><path d="M 18 92 Q 22 96 26 92" stroke="#3a2a1a" stroke-width="1.4" fill="none" stroke-linecap="round"/><circle cx="22" cy="92" r="3" fill="#ff9bbe" opacity="0.5"/></svg></div></div><p class="name">Quill &#x1F994;</p><p class="blurb">Looks pointy. Gives the gentlest hugs.</p></div>
+    <div class="crew-card"><div class="stage"><div class="critter octopus"><svg viewBox="0 0 110 120"><defs><radialGradient id="oct-grad" cx="40%" cy="35%" r="65%"><stop offset="0%" stop-color="#ffc8e8"/><stop offset="100%" stop-color="#c87fc8"/></radialGradient></defs><g fill="#b06ab0"><path d="M 30 70 Q 14 80 18 100 Q 22 112 16 116 Q 24 118 28 108 Q 32 96 36 84 Z"/><path d="M 80 70 Q 96 80 92 100 Q 88 112 94 116 Q 86 118 82 108 Q 78 96 74 84 Z"/><path d="M 55 78 Q 50 100 58 116 Q 60 110 60 100 Q 60 90 60 80 Z"/></g><ellipse cx="55" cy="58" rx="38" ry="36" fill="url(#oct-grad)"/><g fill="#d889d8"><path d="M 38 78 Q 26 90 32 110 Q 36 116 30 118 Q 40 120 44 108 Q 46 96 46 84 Z"/><path d="M 72 78 Q 84 90 78 110 Q 74 116 80 118 Q 70 120 66 108 Q 64 96 64 84 Z"/><path d="M 48 80 Q 42 100 50 116 Q 52 110 52 100 Q 52 90 54 82 Z"/><path d="M 62 80 Q 68 100 60 116 Q 58 110 58 100 Q 58 90 56 82 Z"/></g><circle cx="42" cy="56" r="6" fill="white"/><circle cx="68" cy="56" r="6" fill="white"/><circle cx="43" cy="58" r="3.5" fill="#2b1d3a"/><circle cx="69" cy="58" r="3.5" fill="#2b1d3a"/><circle cx="44" cy="56" r="1.2" fill="white"/><circle cx="70" cy="56" r="1.2" fill="white"/><circle cx="34" cy="68" r="3" fill="#ff7eb5" opacity="0.6"/><circle cx="76" cy="68" r="3" fill="#ff7eb5" opacity="0.6"/><path d="M 50 70 Q 55 76 60 70" stroke="#7a3a7a" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div></div><p class="name">Inky &#x1F419;</p><p class="blurb">Has eight arms &mdash; that's eight high-fives.</p></div>
+    <div class="crew-card"><div class="stage"><div class="critter panda"><svg viewBox="0 0 110 120"><ellipse cx="36" cy="108" rx="10" ry="8" fill="#2b1d3a"/><ellipse cx="74" cy="108" rx="10" ry="8" fill="#2b1d3a"/><ellipse cx="55" cy="84" rx="32" ry="26" fill="white"/><rect x="50" y="74" width="10" height="22" rx="3" fill="#7fcf90"/><circle cx="55" cy="48" r="28" fill="white"/><circle cx="34" cy="28" r="10" fill="#2b1d3a"/><circle cx="76" cy="28" r="10" fill="#2b1d3a"/><ellipse cx="44" cy="48" rx="7" ry="9" fill="#2b1d3a" transform="rotate(-15 44 48)"/><ellipse cx="66" cy="48" rx="7" ry="9" fill="#2b1d3a" transform="rotate(15 66 48)"/><circle cx="45" cy="50" r="3" fill="white"/><circle cx="65" cy="50" r="3" fill="white"/><circle cx="46" cy="51" r="1.5" fill="#2b1d3a"/><circle cx="66" cy="51" r="1.5" fill="#2b1d3a"/><ellipse cx="55" cy="60" rx="3.5" ry="2.5" fill="#2b1d3a"/><circle cx="36" cy="60" r="3" fill="#ff9bbe" opacity="0.55"/><circle cx="74" cy="60" r="3" fill="#ff9bbe" opacity="0.55"/></svg></div></div><p class="name">Bambu &#x1F43C;</p><p class="blurb">Snack expert. Will share the bamboo.</p></div>
+    <div class="crew-card"><div class="stage"><div class="critter bunny"><svg viewBox="0 0 110 120"><ellipse cx="42" cy="20" rx="6" ry="20" fill="#fff5f5" transform="rotate(-12 42 20)"/><ellipse cx="68" cy="20" rx="6" ry="20" fill="#fff5f5" transform="rotate(12 68 20)"/><ellipse cx="42" cy="22" rx="3" ry="14" fill="#ff9bbe" opacity="0.8" transform="rotate(-12 42 22)"/><ellipse cx="68" cy="22" rx="3" ry="14" fill="#ff9bbe" opacity="0.8" transform="rotate(12 68 22)"/><ellipse cx="55" cy="86" rx="28" ry="22" fill="#fff5f5"/><circle cx="55" cy="56" r="22" fill="#fff5f5"/><ellipse cx="46" cy="56" rx="3" ry="4" fill="#2b1d3a"/><ellipse cx="64" cy="56" rx="3" ry="4" fill="#2b1d3a"/><circle cx="47" cy="54" r="1" fill="white"/><circle cx="65" cy="54" r="1" fill="white"/><path d="M 53 64 L 57 64 L 55 66 Z" fill="#ff7eb5"/><circle cx="38" cy="62" r="3" fill="#ff9bbe" opacity="0.6"/><circle cx="72" cy="62" r="3" fill="#ff9bbe" opacity="0.6"/></svg></div></div><p class="name">Mochi &#x1F430;</p><p class="blurb">Hops to the moon and back. Loves carrots.</p></div>
+    <div class="crew-card"><div class="stage"><div class="critter turtle"><svg viewBox="0 0 110 120"><ellipse cx="22" cy="92" rx="9" ry="6" fill="#a8d99a"/><ellipse cx="88" cy="92" rx="9" ry="6" fill="#a8d99a"/><ellipse cx="55" cy="98" rx="38" ry="6" fill="#5fb87a" opacity="0.35"/><ellipse cx="55" cy="78" rx="38" ry="26" fill="#76c98c"/><path d="M 17 80 Q 55 100 93 80 Q 55 92 17 80 Z" fill="#fff5dc"/><g fill="#5fb87a" stroke="#4a9461" stroke-width="1.4" stroke-linejoin="round"><polygon points="55,58 67,63 67,75 55,80 43,75 43,63"/><polygon points="32,68 42,72 42,80 32,82 24,78 24,72"/><polygon points="78,68 86,72 86,78 78,82 68,80 68,72"/></g><ellipse cx="42" cy="62" rx="14" ry="6" fill="white" opacity="0.35"/><ellipse cx="28" cy="100" rx="10" ry="5" fill="#a8d99a"/><ellipse cx="82" cy="100" rx="10" ry="5" fill="#a8d99a"/><path d="M 92 80 L 100 78 L 96 84 Z" fill="#a8d99a"/><ellipse cx="22" cy="74" rx="14" ry="11" fill="#a8d99a"/><circle cx="14" cy="78" r="3" fill="#ff9bbe" opacity="0.6"/><circle cx="16" cy="70" r="3" fill="#2b1d3a"/><circle cx="17" cy="69" r="1" fill="white"/><path d="M 10 78 Q 14 82 18 78" stroke="#2b1d3a" stroke-width="1.4" fill="none" stroke-linecap="round"/><g transform="translate(56, 110)"><circle r="2.2" fill="#ff9bbe" cx="-4" cy="-2"/><circle r="2.2" fill="#ff9bbe" cx="0" cy="-4"/><circle r="2.2" fill="#ff9bbe" cx="4" cy="-2"/><circle r="2.2" fill="#ff9bbe" cx="0" cy="2"/><circle r="1.8" fill="#fff3b8"/></g></svg></div></div><p class="name">Shelly &#x1F422;</p><p class="blurb">Slow and steady. Always brings a flower.</p></div>
+  </div>
+</section>
+
+<!-- Big sparkle heart -->
+<section class="heart-section" id="heartSection">
+  <div class="big-heart" id="bigHeart" title="Click me!">
+    <svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="heart-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ff7eb5" />
+          <stop offset="50%" stop-color="#ff9bc4" />
+          <stop offset="100%" stop-color="#c8a0ff" />
+        </linearGradient>
+        <linearGradient id="heart-shine" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="white" stop-opacity="0.6" />
+          <stop offset="100%" stop-color="white" stop-opacity="0" />
+        </linearGradient>
+      </defs>
+      <path d="M100 165 C 30 115, 10 70, 10 45 C 10 20, 30 5, 55 5 C 75 5, 92 18, 100 35 C 108 18, 125 5, 145 5 C 170 5, 190 20, 190 45 C 190 70, 170 115, 100 165 Z"
+            fill="url(#heart-grad)" stroke="white" stroke-width="4" />
+      <ellipse cx="60" cy="40" rx="22" ry="14" fill="url(#heart-shine)" transform="rotate(-25 60 40)" />
+      <circle cx="135" cy="70" r="5" fill="white" opacity="0.8" />
+      <circle cx="80" cy="90" r="3" fill="white" opacity="0.7" />
+      <circle cx="115" cy="100" r="4" fill="white" opacity="0.6" />
+    </svg>
+  </div>
+  <h2 class="heart-msg">You are loved this much!</h2>
+  <p class="heart-sub">Click the heart for a sparkle surprise</p>
 </section>
 
 <footer class="footer">
@@ -328,12 +419,34 @@
     });
   }
   var hash = (location.hash || '').replace('#', '');
-  if (variants.indexOf(hash) !== -1) {
-    show(hash);
-  }
+  if (variants.indexOf(hash) !== -1) show(hash);
   window.addEventListener('hashchange', function() {
     var h = (location.hash || '').replace('#', '');
     if (variants.indexOf(h) !== -1) show(h);
+  });
+})();
+
+// Heart click sparkle burst
+(function () {
+  var h = document.getElementById('bigHeart');
+  if (!h) return;
+  h.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var r = h.getBoundingClientRect();
+    var cx = r.left + r.width / 2;
+    var cy = r.top + r.height / 2;
+    var chars = ['\u{1F496}', '\u2728', '\u2B50', '\u{1F495}', '\u{1F497}', '\u{1F49E}'];
+    for (var i = 0; i < 40; i++) {
+      (function(i) {
+        setTimeout(function() {
+          if (window.MagicSparkle) window.MagicSparkle.spawnSparkle(
+            cx + (Math.random() - 0.5) * 80,
+            cy + (Math.random() - 0.5) * 80,
+            chars[Math.floor(Math.random() * chars.length)]
+          );
+        }, i * 25);
+      })(i);
+    }
   });
 })();
 </script>
