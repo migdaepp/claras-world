@@ -360,19 +360,14 @@ async function postToSheets(payload) {
 }
 
 async function postLike(id, unlike) {
-  // Use a real POST (not no-cors) so we can read the updated count back.
-  // Apps Script returns CORS headers for ContentService responses.
-  try {
-    const r = await fetch(SHEETS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'like', id, unlike: !!unlike }),
-      redirect: 'follow',
-    });
-    return await r.json();
-  } catch (err) {
-    return null;
-  }
+  // Fire-and-forget with no-cors (Apps Script redirects break CORS reads).
+  // We re-fetch the full list afterward to get the real server count.
+  await fetch(SHEETS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ action: 'like', id, unlike: !!unlike }),
+  });
 }
 
 let messages = [];
@@ -444,13 +439,14 @@ function render() {
         if (window.MagicSparkle) MagicSparkle.burstAt(r.left + r.width/2, r.top + r.height/2, 8);
       }
 
-      // Persist to sheet for remote messages and reconcile to server count
+      // Send to sheet, then re-fetch to get real server counts
       if (USE_SHEETS && !isLocal) {
-        const resp = await postLike(id, !willLike);
-        if (resp && resp.ok && typeof resp.likes === 'number' && m) {
-          m.likes = resp.likes;
-          render();
-        }
+        await postLike(id, !willLike);
+        try {
+          await new Promise(r => setTimeout(r, 800));
+          const fresh = await fetchFromSheets();
+          if (fresh.length) { messages = fresh; render(); }
+        } catch (e) { /* optimistic count stays */ }
       }
     });
   });
